@@ -1,0 +1,33 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/javascript-node",
+  "features": {
+    "ghcr.io/lukewiwa/features/shellcheck:0": {
+      "version": "stable"
+    },
+    "ghcr.io/devcontainers/features/terraform:1": {
+      "version": "latest",
+      "tflint": "latest",
+      "terragrunt": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.vscode-yaml",
+        "timonwong.shellcheck",
+        "github.copilot"
+      ]
+    },
+    "codespaces": {
+      "extensions": [
+        "redhat.vscode-yaml",
+        "timonwong.shellcheck",
+        "github.copilot"
+      ]
+    }
+  },
+  "containerEnv": {
+    "SHELL": "/bin/zsh"
+  },
+  "postCreateCommand": "npm i && npm run build"
+}

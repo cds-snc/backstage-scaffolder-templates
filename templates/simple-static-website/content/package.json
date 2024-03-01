@@ -1,0 +1,6 @@
+{
+  "name": "${{ values.name }}",
+  "license": "${{ values.license }}",
+  "private": true,
+  "dependencies": {}
+}
