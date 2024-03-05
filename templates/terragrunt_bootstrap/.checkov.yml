@@ -1,2 +1,2 @@
 skip-check:
-    # Format is <check_id> # <reason>
+    # Format is in the form of <check_id> # <reason>
