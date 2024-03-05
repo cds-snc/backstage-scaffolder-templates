@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
-  name: terraform-s3-bucket
-  title: Create a S3 Bucket 
+  name: terragrunt_bootstrap 
+  title: Bootstrap a repo with terragrunt/terraform 
   description: |
     Creates the terrafrom code and infrastructure to add an S3 bucket. It uses the terraform modules S3 bucket infrastructure.
 
