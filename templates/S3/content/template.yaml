@@ -43,17 +43,11 @@ spec:
           description: Reject requests to create public ACLs. Optional - default is "true"
           type: boolean 
           default: true
-          enum:
-            - true
-            - false
         block_public_policy:
           title: Block public policy 
           description: Reject requests to add Bucket policy if the specified bucket policy allows public access. Optional - default is "true"
           type: boolean 
           default: true
-          enum:
-            - true
-            - false
         bucket_prefix:
           title: Bucket Prefix 
           description: Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket. Optional - creates a new resource.
@@ -68,25 +62,16 @@ spec:
           description: The value of the critical tag. If set to true, protection SCP rules will be applied to the resource. Optional - default is "false"
           type: boolean 
           default: false 
-          enum:
-            - true
-            - false
         force_destroy:
           title: Allow/Disallow force destroy 
           description: A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable. Optional - default is "false"
           type: boolean 
           default: false 
-          enum:
-            - true
-            - false
         ignore_public_acls:
           title: Ignore Public ACLs 
           description:  Ignore public ACLs on this bucket and any objects that it contains. Optional - default is "true"
           type: boolean 
           default: true
-          enum:
-            - true
-            - false
         kms_key_arn:
           title: KMS Key Arn 
           description:  KMS key ARN that will be used to encrypt S3 objects. If not specified, default S3 service key is used for encryption. Optional.
@@ -112,9 +97,6 @@ spec:
           description:  Only the bucket owner and AWS Services can access this buckets if it has a public policy. Optional - default is "true"
           type: boolean 
           default: true
-          enum:
-            - true
-            - false
         tags:
           title: Tags 
           description: Map of tags to apply to the bucket. Optional.
