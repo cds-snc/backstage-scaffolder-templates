@@ -1,6 +1,6 @@
 inputs = {
     account_id        = ""
-    env               = ""
+    env               = "production"
     product_name      = ""
     cost_center_code  = ""
     billing_code	    = ""
