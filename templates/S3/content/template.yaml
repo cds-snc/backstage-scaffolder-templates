@@ -33,78 +33,6 @@ spec:
           type: string
           description: The value of the billing tag for the S3 bucket. Required. 
           ui:help: "Hint: This is probably already defined in your infrastructure, so look for the value in your existing infrastructure."
-        billing_tag_key:
-          title: Billing Tag Key
-          type: string
-          description: The name of the billing tag 
-          default: CostCentre 
-        block_public_acls:
-          title: Block public ACLs 
-          description: Reject requests to create public ACLs. Optional - default is "true"
-          type: boolean 
-          default: true
-        block_public_policy:
-          title: Block public policy 
-          description: Reject requests to add Bucket policy if the specified bucket policy allows public access. Optional - default is "true"
-          type: boolean 
-          default: true
-        bucket_prefix:
-          title: Bucket Prefix 
-          description: Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket. Optional - creates a new resource.
-          type: string
-        critical_tag_key:
-          title: Critical Tag Key 
-          description: The name of the critical tag. Optional - default is "Critical"
-          type: string
-          default: Critical 
-        critical_tag_value:
-          title: The value of the critical tag 
-          description: The value of the critical tag. If set to true, protection SCP rules will be applied to the resource. Optional - default is "false"
-          type: boolean 
-          default: false 
-        force_destroy:
-          title: Allow/Disallow force destroy 
-          description: A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable. Optional - default is "false"
-          type: boolean 
-          default: false 
-        ignore_public_acls:
-          title: Ignore Public ACLs 
-          description:  Ignore public ACLs on this bucket and any objects that it contains. Optional - default is "true"
-          type: boolean 
-          default: true
-        kms_key_arn:
-          title: KMS Key Arn 
-          description:  KMS key ARN that will be used to encrypt S3 objects. If not specified, default S3 service key is used for encryption. Optional.
-          type: string
-        lifecycle_rule:
-          title: Object Lifecycle management 
-          description: "Map containing access bucket logging configuration (target_bucket: name of the bucket to log to, target_prefix: prefix to use when logging). Optional."
-          type: string 
-        logging:
-          title: Access Bucket Logging Configuration 
-          description: Reject requests to create public ACLs.
-          type: string
-        object_lock_configuration:
-          title: Object Lock Configuration 
-          description: Map containing S3 object lock configuration. Optional.
-          type: string
-        replication_configuration:
-          title: Replication Configuration 
-          description: Map containing cross-region replication configuration. Optional.
-          type: string
-        restrict_public_buckets:
-          title: Restrict Public Buckets 
-          description:  Only the bucket owner and AWS Services can access this buckets if it has a public policy. Optional - default is "true"
-          type: boolean 
-          default: true
-        tags:
-          title: Tags 
-          description: Map of tags to apply to the bucket. Optional.
-          type: string
-        versioning:
-          title: Versioning 
-          description: Map containing versioning information."
-          type: string 
 
     - title: Choose a location
       required:
@@ -127,7 +55,7 @@ spec:
             title: Terraform location 
             description: Location where you want the S3 terraform code to be stored 
             type: string
-            ui:help: "Hint: This is the directory structure of where you want the S3 terraform files to live - for exmaple terragrunt/aws/"
+            ui:help: "Hint: This is the directory structure of where you want the S3 terraform files to live - for example terragrunt/aws/"
 
 
   # These steps are executed in the scaffolder backend, using data that we gathered
@@ -144,24 +72,7 @@ spec:
           name: ${{ parameters.name }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
           account: ${{ parameters.account }}
-          billing_code: ${{ parameters.billing_code }}
-          billing_tag_key: ${{ parameters.billing_tag_key }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
-          block_public_acls: ${{ parameters.block_public_acls }}
-          block_public_policy: ${{ parameters.block_public_policy }}
-          bucket_prefix: ${{ parameters.bucket_prefix }}
-          critical_tag_key: ${{ parameters.critical_tag_key }}
-          critical_tag_value: ${{ parameters.critical_tag_value }}
-          force_destroy: ${{ parameters.force_destroy }}
-          ignore_public_acls: ${{ parameters.ignore_public_acls }}
-          kms_key_arn: ${{ parameters.kms_key_arn }}
-          lifecycle_rule: ${{ parameters.lifecycle_rule }}
-          logging: ${{ parameters.logging }}
-          object_lock_configuration: ${{ parameters.object_lock_configuration }}
-          replication_configuration: ${{ parameters.replication_configuration }}
-          restrict_public_buckets: ${{ parameters.restrict_public_buckets }}
-          tags: ${{ parameters.tags }}
-          versioning: ${{ parameters.versioning }}
 
     # Log the values
     - id: log values
@@ -172,24 +83,7 @@ spec:
           name: ${{ parameters.name }}
           repoUrl: "${{ parameters.repoUrl }}"
           account: ${{ parameters.account }}
-          billing_code: ${{ parameters.billing_code }}
-          billing_tag_key: ${{ parameters.billing_tag_key }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
-          block_public_acls: ${{ parameters.block_public_acls }}
-          block_public_policy: ${{ parameters.block_public_policy }}
-          bucket_prefix: ${{ parameters.bucket_prefix }}
-          critical_tag_key: ${{ parameters.critical_tag_key }}
-          critical_tag_value: ${{ parameters.critical_tag_value }}
-          force_destroy: ${{ parameters.force_destroy }}
-          ignore_public_acls: ${{ parameters.ignore_public_acls }}
-          kms_key_arn: ${{ parameters.kms_key_arn }}
-          lifecycle_rule: ${{ parameters.lifecycle_rule }}
-          logging: ${{ parameters.logging }}
-          object_lock_configuration: ${{ parameters.object_lock_configuration }}
-          replication_configuration: ${{ parameters.replication_configuration }}
-          restrict_public_buckets: ${{ parameters.restrict_public_buckets }}
-          tags: ${{ parameters.tags }}
-          versioning: ${{ parameters.versioning }}
 
     # Create the terraform PR and publish it to Github. 
     - id: terraform_pr
