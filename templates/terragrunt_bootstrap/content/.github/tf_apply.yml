@@ -4,23 +4,6 @@ on:
   push:
     branches:
       - main
-
-jobs:
-  terragrunt-apply:
-    uses: cds-snc/workflows/.github/workflows/terragrunt-apply.yml@main
-    with:
-      module: terraform
-      role_arn: arn:aws:iam::${{ values.account }}:role/${{ values.billing_code }}-apply
-      terraform_version: 1.3.3
-      terragrunt_version: 0.31.1
-
-
-name: "Terraform Apply"
-
-on:
-  push:
-    branches:
-      - main
     paths:
       - "terraform/**"
       - ".github/workflows/tf_apply.yml"
