@@ -72,9 +72,9 @@ spec:
 
     - title: AWS Account
       required:
-        - account
+        - account_id
       properties:
-        account:
+        account_id:
           title: AWS Account
           type: string
           description: The AWS account where the infrastructure will be deployed
@@ -93,7 +93,7 @@ spec:
         values:
           product_name: ${{ parameters.product_name }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
-          account: ${{ parameters.account }}
+          account_id: ${{ parameters.account_id }}
           billing_code: ${{ parameters.billing_code }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
           cost_center_code: ${{ parameters.cost_center_code }}
@@ -107,7 +107,7 @@ spec:
         values:
           product_name: ${{ parameters.product_name }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
-          account: ${{ parameters.account }}
+          account_id: ${{ parameters.account_id }}
           billing_code: ${{ parameters.billing_code }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
           cost_center_code: ${{ parameters.cost_center_code }}
