@@ -1,8 +1,8 @@
 locals {
-    billing_code = ${{ values.billing_code | dump }}
-    domain = ${{ values.domain | dump }}
-    account_id = ${{ values.account_id | dump }}
-    product_name = ${{ values.product_name | dump }}
+    billing_code      = ${{ values.billing_code | dump }}
+    domain            = ${{ values.domain | dump }}
+    account_id        = ${{ values.account_id | dump }}
+    product_name      = ${{ values.product_name | dump }}
     billing_tag_value = ${{ values.billing_tag_value | dump }}
     cost_center_code = ${{ values.cost_center_code | dump }}
   }
