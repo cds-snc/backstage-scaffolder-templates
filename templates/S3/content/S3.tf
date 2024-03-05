@@ -1,5 +1,5 @@
   module "S3" {
-    source = "github.com/cds-snc/terraform-modules//S3?ref=v9.2.3"
+    source = "github.com/cds-snc/terraform-modules//S3?ref=v9.2.4"
   
     billing_tag_key = var.billing_tag_key
     billing_tag_value  = var.billing_code

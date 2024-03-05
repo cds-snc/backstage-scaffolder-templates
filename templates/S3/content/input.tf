@@ -1,83 +1,109 @@
-variable "billing_code" {
-    description = "The billing code to use for cost allocation (Required)"
-    type        = string
-  }
-  
-  variable "billing_tag_key" {
-    description = "The billing tag to use for cost allocation. (Optional, default value is "CostCenter")"
-    type        = string
-  }
+###
+# Common tags
+###
+variable "billing_tag_key" {
+  description = "(Optional) The name of the billing tag"
+  type        = string
+  default     = "CostCentre"
+}
 
-  variable "block_public_acls" {
-    description = "Rejects access to create public ACLs. (Optional, default value is "true")"
-    type        = string
-  }
+variable "billing_tag_value" {
+  description = "(Rquired) The value of the billing tag"
+  type        = string
+}
 
-  variable "block_public_policy" {
-    description = "Reject requests to add Bucket policy if the specified bucket policy allows public access. (Optional, default value is "true")"
-    type        = string
-  }
+variable "critical_tag_key" {
+  description = "(Optional) The name of the critical tag."
+  type        = string
+  default     = "Critical"
+}
 
-  variable "bucket_name" {
-    description = "The name of the bucket. If omitted, Terraform will assign a random, unique name. (Optional, forces new resource)"
-    type        = string
-  }
+variable "critical_tag_value" {
+  description = "(Required: default=false) The value of the critical tag. If set to true, protection SCP rules will be applied to the resource."
+  type        = bool
+  default     = false
+}
 
-  variable "bucket_prefix" {
-    description = "Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket. (Optional, forces new resource)"
-    type        = string
-  }
+variable "block_public_acls" {
+  description = "(Optional, default 'true') Reject requests to create public ACLs."
+  type        = bool
+  default     = true
+}
 
-  variable "critical_tag_key" {
-    description = "The name of the critical tag. (Optional, default value is "Critical")"
-    type        = string
-  }
+variable "block_public_policy" {
+  description = "(Optional, default 'true') Reject requests to add Bucket policy if the specified bucket policy allows public access."
+  type        = bool
+  default     = true
+}
 
-  variable "critical_tag_value" {
-    description = "The value of the critical tag. If set to true, protection SCP rules will be applied to the resource. (Required, default value is "false")"
-    type        = string
-  }
+variable "ignore_public_acls" {
+  description = "(Optional, default 'true') Ignore public ACLs on this bucket and any objects that it contains."
+  type        = bool
+  default     = true
+}
 
-  variable "force_destroy" {
-    description = "A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable. (Optional, default value is "false")"
-    type        = string
-  }
+variable "restrict_public_buckets" {
+  description = "(Optional, default 'true') Only the bucket owner and AWS Services can access this buckets if it has a public policy."
+  type        = bool
+  default     = true
+}
 
-  variable "ignore_public_acls" {
-    description = "Ignore public ACLs on this bucket and any objects that it contains. (Optional, default value is "true")"
-    type        = string
-  }
-  variable "kms_key_arn" {
-    description = "KMS key ARN that will be used to encrypt S3 objects. If not specified, default S3 service key is used for encryption. (Optional)"
-    type        = string
-  }
-  variable "lifecycle_rule" {
-    description = "List of maps containing configuration of object lifecycle management. (Optional)"
-    type        = string
-  }
-  variable "logging" {
-    description = "Map containing access bucket logging configuration.
-    target_bucket: name of the bucket to log to.
-    target_prefix: prefix to use when logging. (Optional)"
-    type        = string
-  }
-  variable "object_lock_configuration" {
-    description = "Map containing S3 object locking configuration. (Optional, forces new resource)"
-    type        = string
-  }
-  variable "replication_configuration" {
-    description = "Map containing cross-region replication configuration. (Optional)"
-    type        = string
-  }
-  variable "restrict_public_buckets" {
-    description = "Only the bucket owner and AWS Services can access this buckets if it has a public policy. (Optional, default value is "true")"
-    type        = string
-  }
-  variable "tags" {
-    description = "A mapping of tags to assign to the bucket. (Optional)"
-    type        = string
-  }
-  variable "versioning" {
-    description = "Map containing versioning configuration. (Optional)"
-    type        = string
-  }
+variable "bucket_name" {
+  description = "(Optional, Forces new resource) The name of the bucket. If omitted, Terraform will assign a random, unique name."
+  type        = string
+  default     = null
+}
+
+variable "bucket_prefix" {
+  description = "(Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket."
+  type        = string
+  default     = null
+}
+
+variable "tags" {
+  description = "(Optional) A mapping of tags to assign to the bucket."
+  type        = map(string)
+  default     = {}
+}
+
+variable "force_destroy" {
+  description = "(Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable."
+  type        = bool
+  default     = false
+}
+
+variable "versioning" {
+  description = "(Optional) Map containing versioning configuration."
+  type        = map(string)
+  default     = {}
+}
+
+variable "logging" {
+  description = "(Optional) Map containing access bucket logging configuration. </br> **target_bucket**: name of the bucket to log to. </br> **target_prefix**: prefix to use when logging"
+  type        = map(string)
+  default     = {}
+}
+
+variable "lifecycle_rule" {
+  description = "(Optional) List of maps containing configuration of object lifecycle management."
+  type        = any
+  default     = []
+}
+
+variable "object_lock_configuration" {
+  description = "(Optional, Forces new resource) Map containing S3 object locking configuration."
+  type        = any
+  default     = {}
+}
+
+variable "replication_configuration" {
+  description = "(Optional) Map containing cross-region replication configuration."
+  type        = any
+  default     = {}
+}
+
+variable "kms_key_arn" {
+  description = "(Optional) KMS key ARN that will be used to encrypt S3 objects.  If not specified, default S3 service key is used for encryption."
+  type        = string
+  default     = null
+}
