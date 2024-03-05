@@ -1,0 +1,21 @@
+{
+    "features": {
+        "terraform": {
+            "version": "latest",
+            "tflint": "latest",
+            "terragrunt": "latest"
+        }
+    },
+    "customizations": {
+        "vscode": {
+          "extensions": [
+            "hashicorp.terraform"
+          ]
+        },
+        "codespaces": {
+          "extensions": [
+            "hashicorp.terraform"
+          ]
+        }
+      }
+}
