@@ -59,7 +59,7 @@ spec:
       properties:
         repoUrl:
           title: Repository Location
-          description: Name of the repository where the component will be stored
+          description: Name of the repository that is to be bootstrapped. 
           type: string
           ui:field: RepoUrlPicker
           ui:options:
@@ -77,7 +77,7 @@ spec:
         account_id:
           title: AWS Account
           type: string
-          description: The AWS account where the infrastructure will be deployed
+          description: The AWS account where the infrastructure will be deployed to.
           pattern: "^[0-9]*$"
 
   # These steps are executed in the scaffolder backend, using data that we gathered
