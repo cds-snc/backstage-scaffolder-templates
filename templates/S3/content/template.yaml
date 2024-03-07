@@ -20,10 +20,10 @@ spec:
   parameters:
     - title: Fill in the S3 Bucket Details
       required:
-        - name
+        - bucket_name
         - billing_tag_value
       properties:
-        name:
+        bucket_name:
           title: S3 Bucket Name
           type: string
           description: The name of the S3 Bucket. Required.
@@ -69,7 +69,7 @@ spec:
         url: ./content
         targetPath: ./content
         values:
-          name: ${{ parameters.name }}
+          bucket_name: ${{ parameters.bucket_name }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
           account: ${{ parameters.account }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
@@ -80,7 +80,7 @@ spec:
       action: debug:log
       input:
         values:
-          name: ${{ parameters.name }}
+          bucket_name: ${{ parameters.bucket_name }}
           repoUrl: "${{ parameters.repoUrl }}"
           account: ${{ parameters.account }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
@@ -92,10 +92,10 @@ spec:
       input:
        repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
        allowedHosts: ["github.com"]
-       branchName: "backstage_template_S3_${{ parameters.name }}"
-       title: '🔩 Create ${{ parameters.name }} AWS S3 Bucket'
+       branchName: "backstage_template_S3_${{ parameters.bucket_name }}"
+       title: '🔩 Create ${{ parameters.bucket_name }} AWS S3 Bucket'
        description: |
-          ## Creating S3 Bucket ${{ parameters.name }}
+          ## Creating S3 Bucket ${{ parameters.bucket_name }}
             
           This is an initial pull request to create an S3 Bucket and was created based on the Backstage template. 
               
@@ -103,7 +103,7 @@ spec:
    
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/S3)* 👷‍♂️⚙️👷‍♀️
        sourcePath: ./content
-       targetPath: "{{ parameters.terraformLoc }}/${{ parameters.name }}"
+       targetPath: "{{ parameters.terraformLoc }}/${{ parameters.bucket_name }}"
     
   # Outputs are displayed to the user after a successful execution of the template.
   output:
