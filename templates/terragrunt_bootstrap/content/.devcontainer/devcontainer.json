@@ -1,10 +1,9 @@
 {
     "features": {
-        "terraform": {
-            "version": "latest",
-            "tflint": "latest",
-            "terragrunt": "latest"
-        }
+      "ghcr.io/devcontainers/features/terraform:1": {
+        "version": "1.7.4",
+        "terragrunt": "0.55.12"
+      }
     },
     "customizations": {
         "vscode": {
