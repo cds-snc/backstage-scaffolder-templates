@@ -67,7 +67,6 @@ spec:
       action: fetch:template
       input:
         url: ./content
-        targetPath: ./content
         values:
           bucket_name: ${{ parameters.bucket_name }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
