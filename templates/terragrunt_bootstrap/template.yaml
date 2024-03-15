@@ -1,0 +1,145 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: terragrunt_bootstrap 
+  title: Bootstrap a repo with terragrunt/terraform 
+  description: |
+    Bootstraps a repo with terraform and terragrunt. Creates the directory structure and adds the necessary files to get started. 
+
+  tags:
+    - terraform
+    - terragrunt
+    - bootstrap
+    - aws
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Fill in Terraform/Project Details 
+      required:
+        - product_name
+        - cost_center_code
+        - billing_tag_value
+      properties:
+        product_name:
+          title: Product Name
+          type: string
+          description: The name of the product. Required.
+          ui:help: "Hint: This will be the full name of the product, such as GC Notify"
+          ui:autofocus: true
+        cost_center_code:
+          title: Cost Center Code 
+          type: string
+          description: The cost center code of the product. Required.
+          ui:help: "Hint: This will be something like gc-notify "
+          ui:autofocus: true
+        billing_tag_value:
+          title: Billing tag Value 
+          type: string
+          description: The value of the billing tag. Required. 
+          ui:help: "Hint: This will be something like GCNotify."
+        domain:
+          title: Domain 
+          type: string
+          description: The domain that the service will be hosted on. Optional. 
+        billing_code:
+          title: Billing Code  
+          description: The billing code of the service. Optional - default is "CostCentre"
+          type: string 
+          default: "CostCentre" 
+          pattern: "^[a-zA-Z0-9_-]*$"
+
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          description: Name of the repository that is to be bootstrapped. 
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            AllowedOrganizations:
+              - cds-snc
+            allowedOwners:
+              - cds-snc
+
+    - title: AWS Account
+      required:
+        - account_id
+      properties:
+        account_id:
+          title: AWS Account
+          type: string
+          description: The AWS account where the infrastructure will be deployed to.
+          pattern: "^[0-9]*$"
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        targetPath: ./content
+        values:
+          product_name: ${{ parameters.product_name }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+          account_id: ${{ parameters.account_id }}
+          billing_code: ${{ parameters.billing_code }}
+          billing_tag_value: ${{ parameters.billing_tag_value }}
+          cost_center_code: ${{ parameters.cost_center_code }}
+          domain: ${{ parameters.domain}}
+
+    # Log the values
+    - id: log values
+      name: Log Values
+      action: debug:log
+      input:
+        values:
+          product_name: ${{ parameters.product_name }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+          account_id: ${{ parameters.account_id }}
+          billing_code: ${{ parameters.billing_code }}
+          billing_tag_value: ${{ parameters.billing_tag_value }}
+          cost_center_code: ${{ parameters.cost_center_code }}
+          domain: ${{ parameters.domain}}
+
+    - id: show_workspace
+      name: Show workspace files
+      action: debug:log
+      input:
+       listWorkspace: true
+
+    # Create the terraform PR and publish it to Github. 
+    - id: terraform_pr
+      name: Create terraform PR
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+       allowedHosts: ["github.com"]
+       branchName: "backstage_terragrunt_bootstrap_template_${{ parameters.product_name }}"
+       title: '🥾 Bootstrap Terraform/Terragrunt for ${{ parameters.product_name }} 👢'
+       description: |
+          ## Bootstrapping project ${{ parameters.product_name }} with Terraform and Terragrunt
+            
+          This is an initial pull request to create the initial necessary directory structure, devcontainer and github actions.
+              
+   
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/terragrunt_bootstrap)* 👷‍♂️⚙️👷‍♀️
+       sourcePath: ./content
+       targetPath: "terragrunt"
+    
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: 'Go to pull request'
+        icon: github
