@@ -1,0 +1,181 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: terraform-ecs-instance
+  title: Create an ECS instance
+  description: |
+    Creates the terrafrom code and infrastructure to add an ECS instance to your repo. It uses CDS's terraform module infrastructure at https://github.com/cds-snc/terraform-modules/tree/main/ecs
+
+  tags:
+    - terraform
+    - aws
+    - ecs 
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Fill in the ECS Details
+      required:
+        - create_cluster
+        - service_name
+        - subnet_ids
+        - security_group_ids
+        - container_image
+        - task_cpu
+        - task_memory
+        - billing_tag_value
+      properties:
+        create_cluster:
+          title: Create ECS Cluster?
+          type: boolean
+          description: Whether to create an ECS Cluster. Required.
+          default: true
+        cluster_name:
+          title: ECS Cluster Name if creating a cluster
+          type: string
+          description: The name of the ECS Cluster. Required if you are creating a cluster. Otherwise, don't fill it out.
+        service_name:
+          title: ECS Service Name
+          type: string
+          description: The name of the ECS Service. Required.
+        subnet_ids:
+          title: Subnet Ids 
+          type: array 
+          items: 
+            type: string
+          description: List of subnets to associate with the ECS service. Required.
+          ui:help: "Hint: For example [\"vpc-xxxxxxx\", \"vpc-yyyyyyy\", \"vpc-zzzz\"] or use the variable such as var.vpc_private_subnet_ids"
+        security_group_ids:
+          title: Security Group Ids 
+          type: array
+          items: 
+            type: string 
+          description: List of security groups to associate with the ECS Service. Required. 
+          ui:help: "Hint: For example [\"sg-xxxxx\", \"sg-yyyyy\", \"sg-zzzz\"]. If you are using a variable, you can use var.security_group_ids or even [aws_security_group.ecs_tasks.id]"
+        container_image:
+          title: Container image 
+          type: string
+          description: The image used to start a container. This string is passed directly to the Docker daemon. By default, images in the Docker Hub registry are available. Other repositories are specified with either repository-url/image:tag or repository-url/image@digest. Required. 
+          ui:help: "Hint: If you are tagging the image, you can use the format: repository-url/image:tag or repository-url/image@digest or a variable for example if you are using latest as the tag ${var.ecr_repository_url}:latest"
+        task_cpu:
+          title: CPU Units for the ECS task 
+          type: number 
+          description: The number of cpu units used by the task. Consult https://docs.aws.amazon.com/AmazonECS/latest/userguide/fargate-task-defs.html#fargate-tasks-size for valid values. Required. 
+          ui:help: "Hint: For example 256 or 512 or 1024"
+        task_memory:
+          title: Memory units for the ECS task 
+          type: number 
+          description: The amount (in MiB) of memory used by the task. Consult https://docs.aws.amazon.com/AmazonECS/latest/userguide/fargate-task-defs.html#fargate-tasks-size for valid values. Required. 
+          ui:help: "Hint: For example 512 or 1024 or 2048"
+        billing_tag_value:
+          title: Billing tag Value 
+          type: string
+          description: The value of the billing tag. Required. 
+      #dependencies:
+      #  create_cluster:
+       #   allOf:
+        #    - if:
+         #       properties:
+          #        create_cluster: 
+           #         const: true
+            #  then:
+             #   properties:
+              #    cluster_name:
+               #     title: ECS Cluster Name
+                #    type: string
+                 #   description: The name of the ECS Cluster. Required.
+                  #  ui:autofocus: true 
+
+    - title: Choose a location
+      required:
+        - repoUrl
+        - terraformLoc
+      properties:
+        repoUrl:
+          title: Repository Location
+          description: Name of the repository where the component will be stored
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            AllowedOrganizations:
+              - cds-snc
+            allowedOwners:
+              - cds-snc
+        terraformLoc:
+            title: Terraform location 
+            description: Location where you want the ECS terraform code to be stored 
+            type: string
+            ui:help: "Hint: This is the directory structure of where you want the ECS terraform files to live - for example terragrunt/aws/"
+
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          create_cluster: ${{ parameters.create_cluster}}
+          cluster_name: ${{ parameters.cluster_name}}
+          service_name: ${{ parameters.service_name}}
+          subnet_ids: ${{ parameters.subnet_ids}}
+          security_group_ids: ${{ parameters.security_group_ids}}
+          container_image: ${{ parameters.container_image}}
+          task_cpu: ${{ parameters.task_cpu}}
+          task_memory: ${{ parameters.task_memory}}
+          billing_tag_value: ${{ parameters.billing_tag_value}}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+
+    # Log the values
+    - id: log values
+      name: Log Values
+      action: debug:log
+      input:
+        values:
+          create_cluster: ${{ parameters.create_cluster}}
+          cluster_name: ${{ parameters.cluster_name}}
+          service_name: ${{ parameters.service_name}}
+          subnet_ids: ${{ parameters.subnet_ids}}
+          security_group_ids: ${{ parameters.security_group_ids}}
+          container_image: ${{ parameters.container_image}}
+          task_cpu: ${{ parameters.task_cpu}}
+          task_memory: ${{ parameters.task_memory}}
+          billing_tag_value: ${{ parameters.billing_tag_value}}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+
+    # Create the terraform PR and publish it to Github. 
+    - id: terraform_pr
+      name: Create terraform PR
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+       allowedHosts: ["github.com"]
+       branchName: "backstage_template_ECS_${{ parameters.cluster_name}}_${{ parameters.service_name}}"
+       title: '🥡 Create ${{ parameters.cluster_name}} AWS ECS Service 🫙'
+       description: |
+          ## Creating ECS Service cluster name ${{ parameters.cluster_name}} and service name ${{ parameters.service_name}}
+            
+          This is an initial pull request to create an ECS Service and was created based on the Backstage template. 
+              
+          The terraform code is using cds's terraform mdodule for the ECS configuration. For more information, check the official documentation - https://github.com/cds-snc/terraform-modules/tree/main/ecs 
+   
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/ecs)* 👷‍♂️⚙️👷‍♀️
+       targetPath: "${{ parameters.terraformLoc }}/${{ parameters.cluster_name}}_ecs"
+    
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: 'Go to pull request'
+        icon: github
+      - title: 'To view more check documentation'
+        icon: docs
+        url: "https://github.com/cds-snc/terraform-modules/tree/main/ecs"
