@@ -75,20 +75,17 @@ spec:
           title: Billing tag Value 
           type: string
           description: The value of the billing tag. Required. 
-      #dependencies:
-      #  create_cluster:
-       #   allOf:
-        #    - if:
-         #       properties:
-          #        create_cluster: 
-           #         const: true
-            #  then:
-             #   properties:
-              #    cluster_name:
-               #     title: ECS Cluster Name
-                #    type: string
-                 #   description: The name of the ECS Cluster. Required.
-                  #  ui:autofocus: true 
+      dependencies:
+      # This section dynamically adds 'cluster_name' to the list of required fields if 'create_cluster' is true.
+        create_cluster:
+          allOf:
+            - if:
+                properties:
+                  create_cluster:
+                    const: true
+              then:
+                required:
+                  - cluster_name
 
     - title: Choose a location
       required:
