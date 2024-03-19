@@ -4,17 +4,17 @@
 
 output "arn" {
   description = "ARN that identifies the cluster"
-  value       = ${{ values.create_cluster| dump }} ? module.ecs.arn : module.ecs.arn
+  value       = module.ecs.arn
 }
 
 output "cluster_id" {
   description = "ID that identifies the cluster"
-  value       = ${{ values.create_cluster | dump }} ? module.ecs.id : ${{ values.cluster_name | dump }} 
+  value       = module.ecs.cluster_id
 }
 
 output "cluster_name" {
   description = "Name that identifies the cluster"
-  value       = ${{ values.cluster_name| dump }}  
+  value       = module.ecs.cluster_name
 }
 
 ################################################################################
@@ -23,12 +23,12 @@ output "cluster_name" {
 
 output "service_id" {
   description = "ARN that identifies the service"
-  value       = module.ecs.id
+  value       = module.ecs.service_id
 }
 
 output "service_name" {
   description = "Name of the service"
-  value       = module.ecs.name
+  value       = module.ecs.service_name
 }
 
 ################################################################################
@@ -37,27 +37,27 @@ output "service_name" {
 
 output "task_definition_arn" {
   description = "Full ARN of the Task Definition (including both `family` and `revision`)"
-  value       = module.ecs.aws_ecs_task_definition.this.arn
+  value       = module.ecs.task_definition_arn
 }
 
 output "task_definition_revision" {
   description = "Revision of the task in a particular family"
-  value       = module.ecs.aws_ecs_task_definition.this.revision
+  value       = module.ecs.task_definition_revision
 }
 
 output "task_definition_family" {
   description = "The unique name of the task definition"
-  value       = module.ecs.aws_ecs_task_definition.this.family
+  value       = module.ecs.task_definition_family
 }
 
 output "task_exec_role_arn" {
   description = "ARN of the ECS task execution role (used by ECS to initialize and manage the task)"
-  value       = module.ecs.aws_iam_role.this_task_exec.arn 
+  value       = module.ecs.task_exec_role_arn
 }
 
 output "task_role_arn" {
   description = "ARN of the ECS task role (used by the running task container)"
-  value       = module.ecs.aws_iam_role.this_task.arn 
+  value       = module.ecs.task_role_arn
 }
 
 ################################################################################
@@ -66,10 +66,10 @@ output "task_role_arn" {
 
 output "cloudwatch_log_group_name" {
   description = "Name of cloudwatch log group created"
-  value       = module.ecs.aws_cloudwatch_log_group.this.name
+  value       = module.ecs.cloudwatch_log_group_name
 }
 
 output "cloudwatch_log_group_arn" {
   description = "Arn of cloudwatch log group created"
-  value       = module.ecs.aws_cloudwatch_log_group.this.arn
+  value       = module.ecs.cloudwatch_log_group_arn
 }

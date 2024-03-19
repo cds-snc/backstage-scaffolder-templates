@@ -166,7 +166,7 @@ spec:
           The terraform code is using cds's terraform mdodule for the ECS configuration. For more information, check the official documentation - https://github.com/cds-snc/terraform-modules/tree/main/ecs 
    
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/ecs)* 👷‍♂️⚙️👷‍♀️
-       targetPath: "${{ parameters.terraformLoc }}/${{ parameters.cluster_name}}_ecs"
+       targetPath: "${{ parameters.terraformLoc }}/ecs"
     
   # Outputs are displayed to the user after a successful execution of the template.
   output:
