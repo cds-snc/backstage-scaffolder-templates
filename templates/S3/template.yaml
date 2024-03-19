@@ -3,9 +3,9 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: terraform-s3-bucket
-  title: Create a S3 Bucket 
+  title: Create a s3 Bucket 
   description: |
-    Creates the terrafrom code and infrastructure to add an S3 bucket. It uses the terraform modules S3 bucket infrastructure.
+    Creates the terrafrom code and infrastructure to add an s3 bucket. It uses the terraform modules s3 bucket infrastructure.
 
   tags:
     - terraform
@@ -18,20 +18,20 @@ spec:
   # These parameters are used to generate the input form in the frontend, and are
   # used to gather input data for the execution of the template.
   parameters:
-    - title: Fill in the S3 Bucket Details
+    - title: Fill in the s3 Bucket Details
       required:
         - bucket_name
         - billing_tag_value
       properties:
         bucket_name:
-          title: S3 Bucket Name
+          title: s3 Bucket Name
           type: string
-          description: The name of the S3 Bucket. Required.
+          description: The name of the s3 Bucket. Required.
           ui:autofocus: true
         billing_tag_value:
           title: Billing tag Value 
           type: string
-          description: The value of the billing tag for the S3 bucket. Required. 
+          description: The value of the billing tag for the s3 bucket. Required. 
           ui:help: "Hint: This is probably already defined in your infrastructure, so look for the value in your existing infrastructure."
 
     - title: Choose a location
@@ -53,9 +53,9 @@ spec:
               - cds-snc
         terraformLoc:
             title: Terraform location 
-            description: Location where you want the S3 terraform code to be stored 
+            description: Location where you want the s3 terraform code to be stored 
             type: string
-            ui:help: "Hint: This is the directory structure of where you want the S3 terraform files to live - for example terragrunt/aws/"
+            ui:help: "Hint: This is the directory structure of where you want the s3 terraform files to live - for example terragrunt/aws/"
 
 
   # These steps are executed in the scaffolder backend, using data that we gathered
@@ -91,16 +91,16 @@ spec:
       input:
        repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
        allowedHosts: ["github.com"]
-       branchName: "backstage_template_S3_${{ parameters.bucket_name }}"
-       title: '🔩 Create ${{ parameters.bucket_name }} AWS S3 Bucket'
+       branchName: "backstage_template_s3_${{ parameters.bucket_name }}"
+       title: '🔩 Create ${{ parameters.bucket_name }} AWS s3 Bucket'
        description: |
-          ## Creating S3 Bucket ${{ parameters.bucket_name }}
+          ## Creating s3 Bucket ${{ parameters.bucket_name }}
             
-          This is an initial pull request to create an S3 Bucket and was created based on the Backstage template. 
+          This is an initial pull request to create an s3 Bucket and was created based on the Backstage template. 
               
-          The terraform code is using cds's terraform mdodule for the S3 bucket configuration. For more information, check the official documentation - https://github.com/cds-snc/terraform-modules/tree/main/S3
+          The terraform code is using cds's terraform mdodule for the s3 bucket configuration. For more information, check the official documentation - https://github.com/cds-snc/terraform-modules/tree/main/S3
    
-          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/S3)* 👷‍♂️⚙️👷‍♀️
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/s3)* 👷‍♂️⚙️👷‍♀️
        targetPath: "${{ parameters.terraformLoc }}/${{ parameters.bucket_name }}"
     
   # Outputs are displayed to the user after a successful execution of the template.
@@ -110,4 +110,4 @@ spec:
         icon: github
       - title: 'To view more check documentation'
         icon: docs
-        url: "https://github.com/cds-snc/terraform-modules/tree/main/S3"
+        url: "https://github.com/cds-snc/terraform-modules/tree/main/s3"
