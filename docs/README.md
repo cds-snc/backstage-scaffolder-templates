@@ -1,10 +1,5 @@
-# Generic Project Template
+# Backstage Software Templates
 
-This repository provides some base files for setting up a repository at
-CDS. Plan is to create more project template for specific technologies:
+This repository is a collection of software templates for Backstage. 
 
-- project-template-terraform
-- project-template-python
-- project-template-nodejs
-
-Note that default community health files are maintained at <https://github.com/cds-snc/.github>
+Backstage Software Templates are used to create new software components through Backstage. The backstage instance is poinitng to this repo and reads those templates when creating new components through templating. More information on backstage templates can be found [here](https://backstage.io/docs/features/software-templates/).
