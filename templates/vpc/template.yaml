@@ -22,6 +22,9 @@ spec:
       required:
         - vpc_name
         - billing_tag_value
+        - high_availability
+        - allow_https_requests_in
+        - allow_https_requests_out
       properties:
         vpc_name:
           title: VPC Name
@@ -33,7 +36,40 @@ spec:
           type: string
           description: The value of the billing tag for the VPC. Required. 
           ui:help: "Hint: This is probably already defined in your infrastructure, so look for the value in your existing infrastructure."
-
+        high_availability:
+          title: High Availability?
+          type: boolean 
+          description: Will the VPC have public and private subnets in multiple AWS availability zones making it more resilient to outages? Required.
+          default: true
+        allow_https_requests_in:
+          title: Allow HTTPS Requests In?
+          type: boolean 
+          description: Should users and internet services be able to make requests to something running in the VPC and get a response? Required.
+          default: true
+        allow_https_requests_out:
+          title: Allow HTTPS Requests Out?
+          type: boolean 
+          description: Is there a service running in the VPC that will be calling out to internet services and expect a response? Required.
+          default: true 
+        staging_or_production:
+          title: Is this a staging or production service?
+          type: boolean
+          default: true
+          description: Is this a staging or production service? If yes, we need to provide AWS Account ID. Required.
+      dependencies:
+        staging_or_production:
+          allOf:
+            - if:
+                properties:
+                  staging_or_production:
+                    const: true
+              then:
+                properties:
+                  account_id:
+                    title: AWS Account ID 
+                    type: string
+                    description: The AWS Account ID where the VPC will be created. Required.
+    
     - title: Choose a location
       required:
         - repoUrl
@@ -69,6 +105,16 @@ spec:
         url: ./content
         values:
           vpc_name: ${{ parameters.vpc_name}}
+          high_availability: ${{ parameters.high_availability}}
+          allow_https_requests_in: ${{ parameters.allow_https_requests_in}}
+          allow_https_requests_out: ${{ parameters.allow_https_requests_out}}
+          availability_zones: ${{ 3 if parameters.high_availability else 1}}
+          single_nat_gateway: ${{ 'false' if parameters.high_availability else 'true'}}
+          allow_https_requests_in_response: ${{ 'true' if parameters.allow_https_requests_in else 'false'}}
+          allow_https_requests_out_response: ${{ 'true' if parameters.allow_https_requests_out else 'false'}}
+          staging_or_production: ${{ parameters.staging_or_production}}
+          account_id: ${{ parameters.account_id}}
+          cloud_based_sensor: ${{ 1 if parameters.staging_or_production else 0}}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
           billing_tag_value: ${{ parameters.billing_tag_value }}
 
@@ -79,6 +125,14 @@ spec:
       input:
         values:
           vpc_name: ${{ parameters.vpc_name}}
+          high_availability: ${{ parameters.high_availability}}
+          allow_https_requests_in: ${{ parameters.allow_https_requests_in}}
+          allow_https_requests_out: ${{ parameters.allow_https_requests_out}}
+          availability_zones: ${{ parameters.availability_zones}}
+          allow_https_requests_in_response: ${{ parameters.allow_https_requests_in_response}}
+          allow_https_requests_out_response: ${{ parameters.allow_https_requests_out_response}}
+          staging_or_production: ${{ parameters.staging_or_production}}
+          account_id: ${{ parameters.account_id}}
           repoUrl: "${{ parameters.repoUrl }}"
           billing_tag_value: ${{ parameters.billing_tag_value }}
 
