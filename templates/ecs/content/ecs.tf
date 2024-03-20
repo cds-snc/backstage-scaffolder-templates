@@ -18,10 +18,6 @@ module "ecs" {
   security_group_ids  = ${{ values.security_group_ids | dump }}  
   subnet_ids          = ${{ values.subnet_ids| dump }}  
 
-  # Forward logs to Sentinel
-  sentinel_forwarder           = true
-  sentinel_forwarder_layer_arn = "arn:aws:lambda:ca-central-1:283582579564:layer:aws-sentinel-connector-layer:100"
-
   billing_tag_value = ${{ values.billing_tag_value | dump }} 
 }
 
