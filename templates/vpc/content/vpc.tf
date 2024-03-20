@@ -12,8 +12,9 @@ module "vpc" {
   allow_https_requests_in_response  = ${{ values.allow_https_requests_in_response }}
   allow_https_requests_out          = ${{ values.allow_https_requests_out | dump }}
   allow_https_requests_out_response = ${{ values.allow_https_requests_out_response }}
+}
 
-  resource "aws_flow_log" "cloud_based_sensor" {
+resource "aws_flow_log" "cloud_based_sensor" {
     count                =  ${{ values.cloud_based_sensor }} 
     log_destination      = "arn:aws:s3:::cbs-satellite-${{ values.account_id }}/vpc_flow_logs/"
     log_destination_type = "s3"
@@ -24,5 +25,4 @@ module "vpc" {
       CostCentre = ${{ values.billing_tag_value | dump }}
       Terraform  = true
     }
-  }
 }
