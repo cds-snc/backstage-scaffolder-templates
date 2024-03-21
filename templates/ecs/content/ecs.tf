@@ -20,9 +20,3 @@ module "ecs" {
 
   billing_tag_value = ${{ values.billing_tag_value | dump }} 
 }
-
-
-resource "aws_cloudwatch_log_stream" "ecs_log_stream" {
-  name           = "${{ values.service_name }}-log-stream"
-  log_group_name = "/aws/ecs/${{ values.service_name }}"
-}
