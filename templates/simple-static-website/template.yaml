@@ -13,6 +13,7 @@ metadata:
     - static-site
     - devcontainer
     - gh-actions
+    - new
 spec:
   owner: group:cds-snc/internal-sre
   type: service

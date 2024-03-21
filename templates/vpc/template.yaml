@@ -11,6 +11,7 @@ metadata:
     - terraform
     - aws
     - vpc
+    - add
 spec:
   owner: group:cds-snc/internal-sre
   type: service
