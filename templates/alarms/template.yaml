@@ -1,0 +1,167 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: terraform-alarms
+  title: Create an alarm to notify Slack channel of failures 
+  description: |
+    Creates the terrafrom code and infrastructure to add alarms to your project. 
+
+  tags:
+    - terraform
+    - aws
+    - alarms
+    - add
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Fill in the Alarm Details
+      required:
+        - cloudwatch_log_group
+        - slack_webhook_url 
+        - error_alarm_name
+        - error_alarm_description
+        - warning_alarm_name
+        - warning_alarm_description
+        - billing_tag_value 
+      properties:
+        cloudwatch_log_group:
+          title: Cloudwatch Log Group
+          type: string
+          description: The Cloudwatch log group that you want to monitor, such as /aws/lambda/log-system-api. Required.
+          ui:autofocus: true
+        error_alarm_name:
+          title: Error Alarm Name
+          type: string
+          description: The name of the error alarm. Required.
+          ui:autofocus: true
+        error_alarm_description:
+          title: Error Alarm Description
+          type: string
+          description: The description of the error alarm. Required.
+          ui:autofocus: true
+        error_threshold:
+          title: Error threshold  
+          type: string
+          description: The Error threshold for the error alarms. Optional.
+          ui:autofocus: true
+          default: "1"
+        warning_alarm_name:
+          title: Warning Alarm Name
+          type: string
+          description: The name of the warning alarm. Required.
+          ui:autofocus: true
+        warning_alarm_description:
+          title: Warning Alarm Description
+          type: string
+          description: The description of the warning alarm. Required.
+          ui:autofocus: true
+        warning_threshold:
+          title: Warning threshold  
+          type: string
+          description: The warning threshold for the error alarms. Optional.
+          ui:autofocus: true
+          default: "10"
+        slack_webhook_url:
+          title: Slack Webhook url 
+          type: string 
+          description: The Slack webhook url that is associated with the Slack channel. Required.
+        billing_tag_value:
+          title: Billing tag Value 
+          type: string
+          description: The value of the billing tag for the VPC. Required. 
+          ui:help: "Hint: This is probably already defined in your infrastructure, so look for the value in your existing infrastructure."
+    
+    - title: Choose a location
+      required:
+        - repoUrl
+        - terraformLoc
+      properties:
+        repoUrl:
+          title: Repository Location
+          description: Name of the repository where the component will be stored
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            AllowedOrganizations:
+              - cds-snc
+            allowedOwners:
+              - cds-snc
+        terraformLoc:
+            title: Terraform location 
+            description: Location where you want the VPC terraform code to be stored 
+            type: string
+            ui:help: "Hint: This is the directory structure of where you want the VPC terraform files to live - for example terragrunt/aws/"
+
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          cloudwatch_log_group: ${{ parameters.cloudwatch_log_group }}
+          error_alarm_name: ${{ parameters.error_alarm_name }}
+          error_alarm_description: ${{ parameters.error_alarm_description }}
+          error_threshold: ${{ parameters.error_threshold }}
+          warning_alarm_name: ${{ parameters.warning_alarm_name }}
+          warning_alarm_description: ${{ parameters.warning_alarm_description }}
+          warning_threshold: ${{ parameters.warning_threshold }}
+          slack_webhook_url: ${{ parameters.slack_webhook_url }}
+          billing_tag_value: ${{ parameters.billing_tag_value }}
+          repoUrl: "${{ parameters.repoUrl }}"
+
+    # Log the values
+    - id: log values
+      name: Log Values
+      action: debug:log
+      input:
+        values:
+          cloudwatch_log_group: ${{ parameters.cloudwatch_log_group }}
+          error_alarm_name: ${{ parameters.error_alarm_name }}
+          error_alarm_description: ${{ parameters.error_alarm_description }}
+          error_threshold: ${{ parameters.error_threshold }}
+          warning_alarm_name: ${{ parameters.warning_alarm_name }}
+          warning_alarm_description: ${{ parameters.warning_alarm_description }}
+          warning_threshold: ${{ parameters.warning_threshold }}
+          slack_webhook_url: ${{ parameters.slack_webhook_url }}
+          billing_tag_value: ${{ parameters.billing_tag_value }}
+          repoUrl: "${{ parameters.repoUrl }}"
+
+    # Create the terraform PR and publish it to Github. 
+    - id: terraform_pr
+      name: Create terraform PR
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+       allowedHosts: ["github.com"]
+       branchName: "backstage_template_alarms_${{ parameters.cloudwatch_log_group }}"
+       title: '⏰ Create AWS Error and Warning alarms for log group ${{ par️ameters.cloudwatch_log_group }} 📢'
+       description: |
+          ## Creating Error and warning alarms for cloudwatch log group ${{ parameters.cloudwatch_log_group }} with error threshold of ${{ parameters.error_threshold }} and warning threshold of ${{ parameters.warning_threshold }}, respectfully.
+        
+          The alarms will notify the Slack channel with the webhook url ${{ parameters.slack_webhook_url }} when the thresholds are met.
+            
+          This is an initial pull request to create the alarms and was created based on the Backstage template. 
+              
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/alarms)* 👷‍♂️⚙️👷‍♀️
+       targetPath: "${{ parameters.terraformLoc }}/alarms"
+    
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: 'Go to pull request'
+        icon: github
+      - title: 'To view more check documentation'
+        icon: docs
+        url: "https://github.com/cds-snc/terraform-modules/tree/main/alarms"
