@@ -23,10 +23,7 @@ spec:
       required:
         - cloudwatch_log_group
         - slack_webhook_url 
-        - error_alarm_name
-        - error_alarm_description
-        - warning_alarm_name
-        - warning_alarm_description
+        - service_name
         - billing_tag_value 
       properties:
         cloudwatch_log_group:
@@ -34,15 +31,10 @@ spec:
           type: string
           description: The Cloudwatch log group that you want to monitor, such as /aws/lambda/log-system-api. Required.
           ui:autofocus: true
-        error_alarm_name:
-          title: Error Alarm Name
+        service_name:
+          title: The name of the service 
           type: string
-          description: The name of the error alarm. Required.
-          ui:autofocus: true
-        error_alarm_description:
-          title: Error Alarm Description
-          type: string
-          description: The description of the error alarm. Required.
+          description: The name of the service that we are creating the alarms for. Required.
           ui:autofocus: true
         error_threshold:
           title: Error threshold  
@@ -50,16 +42,6 @@ spec:
           description: The Error threshold for the error alarms. Optional.
           ui:autofocus: true
           default: "1"
-        warning_alarm_name:
-          title: Warning Alarm Name
-          type: string
-          description: The name of the warning alarm. Required.
-          ui:autofocus: true
-        warning_alarm_description:
-          title: Warning Alarm Description
-          type: string
-          description: The description of the warning alarm. Required.
-          ui:autofocus: true
         warning_threshold:
           title: Warning threshold  
           type: string
@@ -111,11 +93,8 @@ spec:
         url: ./content
         values:
           cloudwatch_log_group: ${{ parameters.cloudwatch_log_group }}
-          error_alarm_name: ${{ parameters.error_alarm_name }}
-          error_alarm_description: ${{ parameters.error_alarm_description }}
+          service_name: ${{ parameters.service_name }}
           error_threshold: ${{ parameters.error_threshold }}
-          warning_alarm_name: ${{ parameters.warning_alarm_name }}
-          warning_alarm_description: ${{ parameters.warning_alarm_description }}
           warning_threshold: ${{ parameters.warning_threshold }}
           slack_webhook_url: ${{ parameters.slack_webhook_url }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
@@ -128,11 +107,8 @@ spec:
       input:
         values:
           cloudwatch_log_group: ${{ parameters.cloudwatch_log_group }}
-          error_alarm_name: ${{ parameters.error_alarm_name }}
-          error_alarm_description: ${{ parameters.error_alarm_description }}
+          service_name: ${{ parameters.service_name }}
           error_threshold: ${{ parameters.error_threshold }}
-          warning_alarm_name: ${{ parameters.warning_alarm_name }}
-          warning_alarm_description: ${{ parameters.warning_alarm_description }}
           warning_threshold: ${{ parameters.warning_threshold }}
           slack_webhook_url: ${{ parameters.slack_webhook_url }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
@@ -145,10 +121,10 @@ spec:
       input:
        repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
        allowedHosts: ["github.com"]
-       branchName: "backstage_template_alarms_${{ parameters.cloudwatch_log_group }}"
-       title: '⏰ Create AWS Error and Warning alarms for log group ${{ par️ameters.cloudwatch_log_group }} 📢'
+       branchName: "backstage_template_alarms_${{ parameters.service_name }}"
+       title: '⏰ Create AWS Error and Warning alarms for ${{ par️ameters.service_name }} 📢'
        description: |
-          ## Creating Error and warning alarms for cloudwatch log group ${{ parameters.cloudwatch_log_group }} with error threshold of ${{ parameters.error_threshold }} and warning threshold of ${{ parameters.warning_threshold }}, respectfully.
+          ## Creating Error and warning alarms for service ${{ parameters.service_name }} and cloudwatch log group ${{ parameters.cloudwatch_log_group }} with error threshold of ${{ parameters.error_threshold }} and warning threshold of ${{ parameters.warning_threshold }}, respectfully.
         
           The alarms will notify the Slack channel with the webhook url ${{ parameters.slack_webhook_url }} when the thresholds are met.
             
