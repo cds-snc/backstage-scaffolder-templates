@@ -73,7 +73,7 @@ spec:
         billing_tag_value:
           title: Billing tag Value 
           type: string
-          description: The value of the billing tag for the VPC. Required. 
+          description: The value of the billing tag for the alarm. Required. 
           ui:help: "Hint: This is probably already defined in your infrastructure, so look for the value in your existing infrastructure."
     
     - title: Choose a location
@@ -95,9 +95,9 @@ spec:
               - cds-snc
         terraformLoc:
             title: Terraform location 
-            description: Location where you want the VPC terraform code to be stored 
+            description: Location where you want the alarms terraform code to be stored 
             type: string
-            ui:help: "Hint: This is the directory structure of where you want the VPC terraform files to live - for example terragrunt/aws/"
+            ui:help: "Hint: This is the directory structure of where you want the alarms terraform files to live - for example terragrunt/aws/"
 
 
   # These steps are executed in the scaffolder backend, using data that we gathered
