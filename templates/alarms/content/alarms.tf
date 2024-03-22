@@ -29,7 +29,7 @@ resource "aws_cloudwatch_metric_alarm" "alarm_system_error" {
 
 resource "aws_cloudwatch_log_metric_filter" "filter_system_warning" {
   name           = local.warning_logged
-  pattern        = "WARNING"
+  pattern        = "?WARNING ?Warning"
   log_group_name = local.api_cloudwatch_log_group
 
   metric_transformation {
