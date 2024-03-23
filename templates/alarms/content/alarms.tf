@@ -40,8 +40,8 @@ resource "aws_cloudwatch_log_metric_filter" "filter_system_warning" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_system_warning" {
-  alarm_name          = ${{ values.service_name }}-Warning
-  alarm_description   = ${{ values.service_name }} warnings >= ${{ values.warning_threshold }} in 1 minute
+  alarm_name          = "${{ values.service_name }}-Warning"
+  alarm_description   = "${{ values.service_name }} warnings >= ${{ values.warning_threshold }} in 1 minute"
   comparison_operator = "GreaterThanOrEqualToThreshold"
 
   metric_name        = aws_cloudwatch_log_metric_filter.gc_design_system_warning.metric_transformation[0].name
