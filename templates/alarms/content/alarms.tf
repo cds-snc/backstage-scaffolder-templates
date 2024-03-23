@@ -11,8 +11,8 @@ resource "aws_cloudwatch_log_metric_filter" "filter_system_error" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "alarm_system_error" {
-  alarm_name          = ${{ values.service_name}}-Errors
-  alarm_description   = ${{ values.service_name }} errors >= ${{ values.error_threshold }} in 1 minute
+  alarm_name          = "${{ values.service_name}}-Errors"
+  alarm_description   = "${{ values.service_name }} errors >= ${{ values.error_threshold }} in 1 minute"
   comparison_operator = "GreaterThanOrEqualToThreshold"
 
   metric_name        = aws_cloudwatch_log_metric_filter.gc_design_system_error.metric_transformation[0].name
