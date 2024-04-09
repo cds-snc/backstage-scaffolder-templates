@@ -106,8 +106,8 @@ spec:
       input:
         url: ./content
         values:
-            create_daily_notification: ${{ 1 if parameters.create_daily_notification else 0}}
-            create_weekly_notification: ${{ 1 if parameters.create_weekly_notification else 0}}
+            create_daily_notification: ${{ parameters.create_daily_notification }}
+            create_weekly_notification: ${{ parameters.create_weekly_notification }}
             account_name: ${{ parameters.account_name}}
             daily_schedule_expression: ${{ parameters.daily_schedule_expression}}
             weekly_schedule_expression: ${{ parameters.weekly_schedule_expression}}
