@@ -1,0 +1,157 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: terraform-spend-notifier-instance
+  title: Create a Spend notifier instance in your environment
+  description: |
+    Creates the terrafrom code and infrastructure to add a spend notifier module instance to your repo. It uses CDS's terraform module infrastructure at https://github.com/cds-snc/terraform-modules/tree/main/spend_notifier
+
+  tags:
+    - terraform
+    - aws
+    - terraform-modules
+    - spend-notifier 
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Fill in the Spend Notifier Details
+      required:
+        - account_name
+        - billing_tag_value
+      properties:
+        create_daily_notification:
+          title: Create Daily Spend Notification?
+          type: boolean
+          description: Whether or not to create a daily Spend Notification that will be sent to the appropriate channel.
+          default: true
+        create_weekly_notification:
+          title: Create Weekly Spend Notification? 
+          type: boolean 
+          description: Whether or not to create a weekly Spend Notification that will be sent to the appropriate channel.
+        account_name:
+          title: Name of account 
+          type: string
+          description: The name of the AWS account. Required.
+        daily_schedule_expression:
+          title: Daily cron schedule
+          type: string 
+          description: The daily schedule cron expression.
+          ui:help: "Hint: Cron expressions are of the form Minutes Hours Days of Month Month Day of Week Year. For example, to run at 9:30 AM every day, use 30 9 * * ? *"
+        weekly_schedule_expression:
+          title: Weekly cron schedule 
+          type: string 
+          description: The weekly schedule cron expression.
+          ui:help: "Hint: Cron expressions are of the form Minutes Hours Days of Month Month Day of Week Year. For example, to run every Sunday at 9:30 AM, use 30 9 ? * SUN *" 
+        billing_tag_value:
+          title: Billing tag Value 
+          type: string
+          description: The value of the billing tag. Required. 
+      dependencies:
+      # This section dynamically adds 'daily_schedule_expression' to the list of required fields if 'create_daily_notification' is true.
+        create_daily_notification:
+          allOf:
+            - if:
+                properties:
+                  create_daily_notification:
+                    const: true
+              then:
+                required:
+                  - daily_schedule_expression 
+        create_weekly_notification:
+          allOf:
+            - if:
+                properties:
+                  create_weekly_notification:
+                    const: true
+              then:
+               required:
+                  - weekly_schedule_expression 
+
+    - title: Choose a location
+      required:
+        - repoUrl
+        - terraformLoc
+      properties:
+        repoUrl:
+          title: Repository Location
+          description: Name of the repository where the component will be stored
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            AllowedOrganizations:
+              - cds-snc
+            allowedOwners:
+              - cds-snc
+        terraformLoc:
+            title: Terraform location 
+            description: Location where you want the Spend notifier terraform code to be stored 
+            type: string
+            ui:help: "Hint: This is the directory structure of where you want the Spend Notifier terraform files to live - for example terragrunt/aws/"
+
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+            create_daily_notification: ${{ parameters.create_daily_notification }}
+            create_weekly_notification: ${{ parameters.create_weekly_notification }}
+            account_name: ${{ parameters.account_name}}
+            daily_schedule_expression: ${{ parameters.daily_schedule_expression}}
+            weekly_schedule_expression: ${{ parameters.weekly_schedule_expression}}
+            billing_tag_value: ${{ parameters.billing_tag_value}}
+            repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+
+    # Log the values
+    - id: log values
+      name: Log Values
+      action: debug:log
+      input:
+        values:
+            create_daily_notification: ${{ parameters.create_daily_notification}}
+            create_weekly_notification: ${{ parameters.create_weekly_notification}}
+            account_name: ${{ parameters.account_name}}
+            daily_schedule_expression: ${{ parameters.daily_schedule_expression}}
+            weekly_schedule_expression: ${{ parameters.weekly_schedule_expression}}
+            billing_tag_value: ${{ parameters.billing_tag_value}}
+            repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+
+    # Create the terraform PR and publish it to Github. 
+    - id: terraform_pr
+      name: Create terraform PR
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+       allowedHosts: ["github.com"]
+       branchName: "backstage_template_spend_notifier_${{ parameters.account_name}}"
+       title: '💸 Create AWS Spend Notifier for account ${{ parameters.account_name}} 💰'
+       description: |
+          ## Creating Spend notifier notifications for account ${{ parameters.account_name}} 
+            
+          This is an initial pull request to create an Spend notifier Service and was created based on the Backstage template. 
+              
+          The terraform code is using cds's terraform module for the Spend notifier configuration. For more information, check the official documentation - https://github.com/cds-snc/terraform-modules/tree/main/spend_notifier
+   
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/spend_notifier)* 👷‍♂️⚙️👷‍♀️
+       targetPath: "${{ parameters.terraformLoc }}/spend_notifier"
+    
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: 'Go to pull request'
+        icon: github
+      - title: 'To view more check documentation'
+        icon: docs
+        url: "https://github.com/cds-snc/terraform-modules/tree/main/spend_notifier"
