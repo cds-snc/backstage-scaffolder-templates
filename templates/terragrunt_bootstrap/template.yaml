@@ -136,7 +136,6 @@ spec:
    
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/terragrunt_bootstrap)* 👷‍♂️⚙️👷‍♀️
        sourcePath: ./content
-       targetPath: "terragrunt"
     
   # Outputs are displayed to the user after a successful execution of the template.
   output:
