@@ -37,7 +37,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ values.account_id | dump }}:role/${{ values.billing_code | dump }}-plan
           role-session-name: TFPlan
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: "ca-central-1" 
 
       - name: Terraform plan
         uses: cds-snc/terraform-plan@32db69c102392f5a91828307d29cd7619cd180c0 # v3.2.1
@@ -45,5 +45,4 @@ jobs:
           comment-delete: true
           comment-title: "Environment terragrunt"
           directory: "terragrunt" 
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           terragrunt: true
