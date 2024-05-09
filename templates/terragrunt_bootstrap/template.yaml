@@ -105,7 +105,7 @@ spec:
       input:
         values:
           product_name: ${{ parameters.product_name }}
-          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+          repoUrl: "${{ parameters.repoUrl }}"
           account_id: ${{ parameters.account_id }}
           billing_code: ${{ parameters.billing_code }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
@@ -124,7 +124,6 @@ spec:
        description: |
           ## Bootstrapping project ${{ parameters.product_name }} with Terraform and Terragrunt
           This is an initial pull request to create the initial necessary directory structure, devcontainer and github actions.
-              
    
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/terragrunt_bootstrap)* 👷‍♂️⚙️👷‍♀️
        targetPath: "./" 
