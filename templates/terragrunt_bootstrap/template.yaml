@@ -112,12 +112,6 @@ spec:
           cost_center_code: ${{ parameters.cost_center_code }}
           domain: ${{ parameters.domain}}
 
-    - id: show_workspace
-      name: Show workspace files
-      action: debug:log
-      input:
-       listWorkspace: true
-
     # Create the terraform PR and publish it to Github. 
     - id: terraform_pr
       name: Create terraform PR
@@ -129,12 +123,11 @@ spec:
        title: '🥾 Bootstrap Terraform/Terragrunt for ${{ parameters.product_name }} 👢'
        description: |
           ## Bootstrapping project ${{ parameters.product_name }} with Terraform and Terragrunt
-            
           This is an initial pull request to create the initial necessary directory structure, devcontainer and github actions.
               
    
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/terragrunt_bootstrap)* 👷‍♂️⚙️👷‍♀️
-       targetPath: '.'
+       targetPath: "./" 
     
   # Outputs are displayed to the user after a successful execution of the template.
   output:
