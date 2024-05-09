@@ -123,7 +123,6 @@ spec:
        title: '🥾 Bootstrap Terraform/Terragrunt for ${{ parameters.product_name }} 👢'
        description: |
           ## Bootstrapping project ${{ parameters.product_name }} with Terraform and Terragrunt
-            :want
           This is an initial pull request to create the initial necessary directory structure, devcontainer and github actions.
               
    
