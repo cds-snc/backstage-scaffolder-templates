@@ -8,12 +8,12 @@ terraform {
   }
   
   provider "aws" {
-    region              = var.region
-    allowed_account_ids = [var.account_id]
+    region              = "ca-central-1" 
+    allowed_account_ids = [${{ values.account_id | dump }} ]
   }
   
   provider "aws" {
     alias               = "us-east-1"
     region              = "us-east-1"
-    allowed_account_ids = [var.account_id]
+    allowed_account_ids = [${{ values.account_id | dump }} ]
   }
