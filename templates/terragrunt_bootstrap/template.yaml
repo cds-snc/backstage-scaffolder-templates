@@ -126,7 +126,6 @@ spec:
           This is an initial pull request to create the initial necessary directory structure, devcontainer and github actions.
    
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/terragrunt_bootstrap)* 👷‍♂️⚙️👷‍♀️
-       targetPath: "./" 
     
   # Outputs are displayed to the user after a successful execution of the template.
   output:
