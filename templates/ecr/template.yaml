@@ -88,7 +88,7 @@ spec:
       input:
        repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
        allowedHosts: ["github.com"]
-       branchName: "backstage_template_ECR_${{ parameters.product_name }}
+       branchName: "backstage_template_ECR_${{ parameters.product_name }}"
        title: '🏬 Create ${{ parameters.product_name }} AWS ECR Service 🫙'
        description: |
           ## Creating ECR for ${{ parameters.product_name}}
