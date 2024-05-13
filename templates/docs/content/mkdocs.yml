@@ -1,0 +1,6 @@
+site_name: Digital Transformation Office - BTN Toolbox 
+
+site_description: A collection of scripts used by the Digital Transformation Office.
+
+plugins:
+  - techdocs-core
