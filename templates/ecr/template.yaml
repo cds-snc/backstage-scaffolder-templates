@@ -1,0 +1,105 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: terraform-ecr-instance
+  title: Create an ECR instance
+  description: |
+    Creates the terrafrom code and infrastructure to add an ECR instance to your repo. 
+
+  tags:
+    - terraform
+    - aws
+    - ecr 
+    - add
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Fill in the ECR Details
+      required:
+        - product_name
+        - billing_code 
+      properties:
+        product_name:
+          title: Product Name 
+          type: string 
+          description: The product name for which the ECR is being created for. Required.
+        billing_code:
+          title: Billing Code Value 
+          type: string
+          description: The value of the billing code. Required. 
+
+    - title: Choose a location
+      required:
+        - repoUrl
+        - terraformLoc
+      properties:
+        repoUrl:
+          title: Repository Location
+          description: Name of the repository where the component will be stored
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            AllowedOrganizations:
+              - cds-snc
+            allowedOwners:
+              - cds-snc
+        terraformLoc:
+            title: Terraform location 
+            description: Location where you want the ECR terraform code to be stored 
+            type: string
+            ui:help: "Hint: This is the directory structure of where you want the ECR terraform files to live - for example terragrunt/aws/"
+
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          product_name: ${{ parameters.product_name }}
+          billing_code: ${{ parameters.billing_code }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+
+    # Log the values
+    - id: log values
+      name: Log Values
+      action: debug:log
+      input:
+        values:
+          product_name: ${{ parameters.product_name }}
+          billing_code: ${{ parameters.billing_code }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+
+    # Create the terraform PR and publish it to Github. 
+    - id: terraform_pr
+      name: Create terraform PR
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+       allowedHosts: ["github.com"]
+       branchName: "backstage_template_ECR_${{ parameters.product_name }}
+       title: '🏬 Create ${{ parameters.product_name }} AWS ECR Service 🫙'
+       description: |
+          ## Creating ECR for ${{ parameters.product_name}}
+            
+          This is an initial pull request to create an ECR and was created based on the Backstage template. 
+              
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/ecr)* 👷‍♂️⚙️👷‍♀️
+       targetPath: "${{ parameters.terraformLoc }}/ecr"
+    
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: 'Go to pull request'
+        icon: github
