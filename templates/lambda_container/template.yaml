@@ -39,11 +39,16 @@ spec:
           title: ECR ARN 
           type: string
           description: The Arn of the Elastic Container Registry (ECR). Required.
+        ecr_repository_url:
+          title: ECR Repository URL 
+          type: string 
+          description: The URL of the ECR Repository. Required.
+          ui:help: "Hint: For example 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo"
         ecr_tag:
           title: ECR Tag 
           type: string 
           description: The tag of the ECR Image. Required.
-          ui:help: "Hint: For example "latest" 
+          ui:help: "Hint: For example latest" 
         memory:
           title: Memory of the lambda function 
           type: string 
