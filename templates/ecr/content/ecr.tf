@@ -12,7 +12,7 @@ resource "aws_ecr_repository" "${{ values.product_name }}_ecr" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "${{ values.product_name }}_exire_untagged" {
+resource "aws_ecr_lifecycle_policy" "${{ values.product_name }}_expire_untagged" {
   repository = aws_ecr_repository.api.name
   policy = jsonencode({
     "rules" : [
