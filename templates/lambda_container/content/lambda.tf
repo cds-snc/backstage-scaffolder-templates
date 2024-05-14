@@ -1,5 +1,5 @@
 module "${{ values.product_name }}_lambda" {
-    source                 = "github.com/cds-snc/terraform-modules//lambda?ref=v6.1.5"
+    source                 = "github.com/cds-snc/terraform-modules//lambda?ref=v9.4.4"
     name                   = "${{ values.product_name }}-lambda"
     billing_tag_value      = ${{ values.billing_code | dump }}
     ecr_arn                = ${{ values.ecr_arn | dump }}
