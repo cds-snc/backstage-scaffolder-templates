@@ -1,0 +1,149 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: terraform-lambda-container-instance
+  title: Create an Lambda container image function instance
+  description: |
+    Creates the terrafrom code and infrastructure to add a Lambda function with container image instance to your repo. It uses CDS's terraform module infrastructure at https://github.com/cds-snc/terraform-modules/tree/main/lambda
+
+  tags:
+    - terraform
+    - aws
+    - lambda 
+    - add
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Fill in the lambda Details
+      required:
+        - product_name 
+        - billing_code 
+        - ecr_arn 
+        - ecr_repository_url 
+        - ecr_tag  
+      properties:
+        product_name:
+          title: What is the product name that you are creating the lambda for?
+          type: string 
+          description: The product name for the product for which you are creating the lambda function for . Required.
+        billing_code:
+          title: Billing code 
+          type: string
+          description: The billing code to associate with the lambda function. 
+        ecr_arn:
+          title: ECR ARN 
+          type: string
+          description: The Arn of the Elastic Container Registry (ECR). Required.
+        ecr_repository_url:
+          title: ECR Repository URL 
+          type: string 
+          description: The URL of the ECR Repository. Required.
+          ui:help: "Hint: For example 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo"
+        ecr_tag:
+          title: ECR Tag 
+          type: string 
+          description: The tag of the ECR Image. Required.
+          ui:help: "Hint: For example latest" 
+        memory:
+          title: Memory of the lambda function 
+          type: string 
+          description: Memory of the lambda function. Optional. 
+          ui:help: "Hint: Default memory is 128, but you can use any number."
+        timeout:
+          title: Timeout of the lambda function 
+          type: string
+          description: The timeout of the lambda function. Optional.
+          ui:help: "Hint: Default is 3 seconds, but you can use any number. Max timeout is 900"
+
+    - title: Choose a location
+      required:
+        - repoUrl
+        - terraformLoc
+      properties:
+        repoUrl:
+          title: Repository Location
+          description: Name of the repository where the component will be stored
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            AllowedOrganizations:
+              - cds-snc
+            allowedOwners:
+              - cds-snc
+        terraformLoc:
+            title: Terraform location 
+            description: Location where you want the lambda function terraform code to be stored 
+            type: string
+            ui:help: "Hint: This is the directory structure of where you want the lambda function terraform files to live - for example terragrunt/aws/"
+
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          product_name: ${{ parameters.product_name }}
+          billing_code: ${{ parameters.billing_code }}
+          ecr_arn: ${{ parameters.ecr_arn }}
+          ecr_repository_url: ${{ parameters.ecr_repository_url }}
+          ecr_tag: ${{ parameters.ecr_tag }}
+          memory: ${{ parameters.memory }}
+          timeout: ${{ parameters.timeout }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+          terraformLoc: ${{ parameters.terraformLoc }}
+
+    # Log the values
+    - id: log values
+      name: Log Values
+      action: debug:log
+      input:
+        values:
+          product_name: ${{ parameters.product_name }}
+          billing_code: ${{ parameters.billing_code }}
+          ecr_arn: ${{ parameters.ecr_arn }}
+          ecr_repository_url: ${{ parameters.ecr_repository_url }}
+          ecr_tag: ${{ parameters.ecr_tag }}
+          memory: ${{ parameters.memory }}
+          timeout: ${{ parameters.timeout }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+          terraformLoc: ${{ parameters.terraformLoc }}
+
+    # Create the terraform PR and publish it to Github. 
+    - id: terraform_pr
+      name: Create terraform PR
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+       allowedHosts: ["github.com"]
+       branchName: "backstage_template_${{ parameters.product_name}}_lambda"
+       title: '🥡 Create AWS lambda function with Container image for ${{ parameters.product_name }} ➕ 🟰'
+       description: |
+          ## Creating an AWS Lambda function with a container image for ${{ parameters.product_name }} 
+            
+          This is an initial pull request to create a lambda function and was created based on a Backstage template. 
+              
+          The terraform code is using cds's terraform mdodule for the ECS configuration. For more information, check the official documentation - https://github.com/cds-snc/terraform-modules/tree/main/lambda
+   
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/lambda)* 👷‍♂️⚙️👷‍♀️
+       targetPath: "${{ parameters.terraformLoc }}/lambda"
+    
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: 'Go to pull request'
+        icon: github
+      - title: 'To view more check documentation'
+        icon: docs
+        url: "https://github.com/cds-snc/terraform-modules/tree/main/lambda"
