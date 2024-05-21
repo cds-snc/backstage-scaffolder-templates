@@ -102,7 +102,7 @@ spec:
           The terraform code is using cds's terraform mdodule for the s3 bucket configuration. For more information, check the official documentation - https://github.com/cds-snc/terraform-modules/tree/main/S3
    
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/s3)* 👷‍♂️⚙️👷‍♀️
-       targetPath: "${{ parameters.terraformLoc }}/${{ parameters.bucket_name }}"
+       targetPath: "${{ parameters.terraformLoc }}/S3"
     
   # Outputs are displayed to the user after a successful execution of the template.
   output:
