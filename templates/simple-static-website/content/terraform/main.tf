@@ -9,7 +9,7 @@ variable "domain_name" {
 }
 
 module "website" {
-  source = "github.com/cds-snc/terraform-modules//simple_static_website?ref=v9.4.4"
+  source = "github.com/cds-snc/terraform-modules//simple_static_website?ref=v9.4.5"
 
   domain_name_source = var.domain_name
   billing_tag_value  = var.billing_code
