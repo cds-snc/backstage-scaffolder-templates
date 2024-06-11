@@ -22,16 +22,11 @@ spec:
     - title: Fill in the Hosted Zone Details
       required:
         - product_name 
-        - billing_code 
       properties:
         product_name:
           title: What is the product name that you are creating the hosted zone for?
           type: string 
           description: The product name for the product for which you are creating the hosted zone for . Required.
-        billing_code:
-          title: Billing code 
-          type: string
-          description: The billing code to associate with the hosted zone. 
 
     - title: Choose a location
       required:
@@ -68,7 +63,6 @@ spec:
         url: ./content
         values:
           product_name: ${{ parameters.product_name }}
-          billing_code: ${{ parameters.billing_code }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
           terraformLoc: ${{ parameters.terraformLoc }}
 
@@ -79,7 +73,6 @@ spec:
       input:
         values:
           product_name: ${{ parameters.product_name }}
-          billing_code: ${{ parameters.billing_code }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
           terraformLoc: ${{ parameters.terraformLoc }}
 
