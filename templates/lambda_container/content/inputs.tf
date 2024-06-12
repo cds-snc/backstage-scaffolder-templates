@@ -3,7 +3,7 @@ variable "ecr_repository_url" {
     type        = string
   }
   
-  variable "ecr_repository_arn" {
+variable "ecr_repository_arn" {
     description = "Arn of the Doc_to_html ECR Repository"
     type        = string
   }
