@@ -23,8 +23,6 @@ spec:
       required:
         - product_name 
         - billing_code 
-        - ecr_arn 
-        - ecr_repository_url 
         - ecr_tag  
       properties:
         product_name:
@@ -35,15 +33,6 @@ spec:
           title: Billing code 
           type: string
           description: The billing code to associate with the lambda function. 
-        ecr_arn:
-          title: ECR ARN 
-          type: string
-          description: The Arn of the Elastic Container Registry (ECR). Required.
-        ecr_repository_url:
-          title: ECR Repository URL 
-          type: string 
-          description: The URL of the ECR Repository. Required.
-          ui:help: "Hint: For example 123456789012.dkr.ecr.us-east-1.amazonaws.com/my-repo"
         ecr_tag:
           title: ECR Tag 
           type: string 
@@ -96,8 +85,6 @@ spec:
         values:
           product_name: ${{ parameters.product_name }}
           billing_code: ${{ parameters.billing_code }}
-          ecr_arn: ${{ parameters.ecr_arn }}
-          ecr_repository_url: ${{ parameters.ecr_repository_url }}
           ecr_tag: ${{ parameters.ecr_tag }}
           memory: ${{ parameters.memory }}
           timeout: ${{ parameters.timeout }}
@@ -112,9 +99,6 @@ spec:
         values:
           product_name: ${{ parameters.product_name }}
           billing_code: ${{ parameters.billing_code }}
-          ecr_arn: ${{ parameters.ecr_arn }}
-          ecr_repository_url: ${{ parameters.ecr_repository_url }}
-          ecr_tag: ${{ parameters.ecr_tag }}
           memory: ${{ parameters.memory }}
           timeout: ${{ parameters.timeout }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"

@@ -2,9 +2,9 @@ module "${{ values.product_name }}_lambda" {
     source                 = "github.com/cds-snc/terraform-modules//lambda?ref=v9.4.4"
     name                   = "${{ values.product_name }}-lambda"
     billing_tag_value      = ${{ values.billing_code | dump }}
-    ecr_arn                = ${{ values.ecr_arn | dump }}
+    ecr_arn                = var.ecr_repository_arn
     enable_lambda_insights = true
-    image_uri              = "${{ values.ecr_repository_url }}:${{ values.ecr_tag }}"
+    image_uri              = "${var.ecr_repository_url}:${{ values.ecr_tag }}"
     memory                 = ${{ values.memory }} 
     timeout                = ${{ values.timeout }} 
   }
