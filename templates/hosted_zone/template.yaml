@@ -10,7 +10,7 @@ metadata:
   tags:
     - terraform
     - aws
-    - hosted_zone 
+    - hosted-zone 
     - add
 spec:
   owner: group:cds-snc/internal-sre
