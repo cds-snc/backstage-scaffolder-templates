@@ -1,5 +1,32 @@
-# In the aws directory, we place the terraform files to create the infrastructure in AWS. General format of the directory structure is as follows:
-# Cloud computing service directory such as Cloudfront, S3, ECS, RDS, etc. Inside the directory, we can have the following files:
-    # |__ input.tf file to define the input variables
-    # |__ main.tf file to define the resources
-    # |__ output.tf file to define the output variables
+### AWS Service Directories
+
+The directory structure for AWS services organizes Terraform configurations by service:
+
+    aws/
+    │
+    ├── cloudfront/
+    │   ├── input.tf
+    │   ├── main.tf
+    │   └── output.tf
+    │
+    ├── s3/
+    │   ├── input.tf
+    │   ├── main.tf
+    │   └── output.tf
+    │
+    ├── ecs/
+    │   ├── input.tf
+    │   ├── main.tf
+    │   └── output.tf
+    │
+    ├── rds/
+    │   ├── input.tf
+    │   ├── main.tf
+    │   └── output.tf
+    |__
+
+Each directory corresponds to an AWS service and contains the following Terraform files:
+
+- **`input.tf`**: Defines the input variables used to parameterize the Terraform configurations.
+- **`main.tf`**: Contains the core Terraform code that defines the resources to be created in AWS.
+- **`output.tf`**: Defines the output variables that Terraform will return after applying the configuration.
