@@ -42,10 +42,14 @@ spec:
           type: string
           description: The value of the billing tag. Required. 
           ui:help: "Hint: This will be something like GCNotify."
-        domain:
-          title: Domain 
+        staging_domain:
+          title: Staging Domain 
           type: string
-          description: The domain that the service will be hosted on. Optional. 
+          description: The domain that the service will be hosted on in the staging environment. Optional. 
+        production_domain:
+          title: Production Domain 
+          type: string
+          description: The domain that the service will be hosted on in the production environment. Optional. 
         billing_code:
           title: Billing Code  
           description: The billing code of the service. Optional - default is "CostCentre"
@@ -70,14 +74,24 @@ spec:
             allowedOwners:
               - cds-snc
 
-    - title: AWS Account
+    - title: AWS Staging Account
       required:
-        - account_id
+        - staging_account_id
       properties:
-        account_id:
-          title: AWS Account
+        staging_account_id:
+          title: AWS Staging Account
           type: string
-          description: The AWS account where the infrastructure will be deployed to.
+          description: The AWS staging account where the infrastructure will be deployed to.
+          pattern: "^[0-9]*$"
+  
+    - title: AWS Production Account
+      required:
+        - production_account_id 
+      properties:
+        production_account_id:
+          title: AWS Production Account
+          type: string
+          description: The AWS production account where the infrastructure will be deployed to.
           pattern: "^[0-9]*$"
 
   # These steps are executed in the scaffolder backend, using data that we gathered
@@ -92,11 +106,13 @@ spec:
         values:
           product_name: ${{ parameters.product_name }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
-          account_id: ${{ parameters.account_id }}
+          staging_account_id: ${{ parameters.staging_account_id }}
+          production_account_id: ${{ parameters.production_account_id }}
           billing_code: ${{ parameters.billing_code }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
           cost_center_code: ${{ parameters.cost_center_code }}
-          domain: ${{ parameters.domain}}
+          staging_domain: ${{ parameters.staging_domain}}
+          production_domain: ${{ parameters.production_domain}}
 
     # Log the values
     - id: log values
@@ -106,11 +122,13 @@ spec:
         values:
           product_name: ${{ parameters.product_name }}
           repoUrl: "${{ parameters.repoUrl }}"
-          account_id: ${{ parameters.account_id }}
+          staging_account_id: ${{ parameters.staging_account_id }}
+          production_account_id: ${{ parameters.production_account_id }}
           billing_code: ${{ parameters.billing_code }}
           billing_tag_value: ${{ parameters.billing_tag_value }}
           cost_center_code: ${{ parameters.cost_center_code }}
-          domain: ${{ parameters.domain}}
+          staging_domain: ${{ parameters.staging_domain}}
+          production_domain: ${{ parameters.production_domain}}
 
     # Create the terraform PR and publish it to Github. 
     - id: terraform_pr
