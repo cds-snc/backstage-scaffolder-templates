@@ -5,7 +5,7 @@ metadata:
   name: renovate 
   title: Add renovate to your repo
   description: |
-    Adds the renovate configuration files to your repo so that renovate can start managing dependencies. 
+    Adds the renovate configuration file to your repo so that renovate can start managing dependencies. 
 
   tags:
     - aws
@@ -67,7 +67,7 @@ spec:
        description: |
           ## Renovate configuration addition.
             
-          This is an initial pull request to add renovate configuration file to the repo so that Renovate can start managing your dependencies.
+          This is an initial pull request to add the renovate configuration file to the repo so that Renovate can start managing your dependencies.
               
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/renovate)* 👷‍♂️⚙️👷‍♀️
        targetPath: "./"
