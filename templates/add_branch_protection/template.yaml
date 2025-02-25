@@ -1,0 +1,95 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: add_branch_protection 
+  title: Add Branch Protection
+  description: |
+    Turns on branch protection on your repo with some recommended defaults. 
+
+  tags:
+    - github
+    - add
+spec:
+  owner: group:cds-snc/internal-sre
+  type: file 
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: What is the repo name?
+      required:
+        - repoUrl 
+        - branch
+      properties:
+        repoUrl:
+          title: Repository Location
+          description: Name of the repository where branch protection will be added 
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            AllowedOrganizations:
+              - cds-snc
+            allowedOwners:
+              - cds-snc
+        branch:
+          title: Branch Name
+          description: The branch you want to protect 
+          type: string
+          default: main
+
+    - title: Branch protection rules
+      required:
+        - requiredApprovingReviewCount 
+        - requiredCommitSigning 
+        - requiredConversationResolution
+      properties:
+        requiredApprovingReviewCount:
+          title: Require approvers before merge 
+          type: number 
+          description: The number of approvers that need to approve a PR before it can be merged.
+          default: 1
+        requiredCommitSigning:
+          title: Require signed commits
+          type: boolean
+          description: Require commits to be signed.
+          default: true
+        requiredConversationResolution:
+          title: Require conversation resolution
+          type: boolean
+          description: Require all conversations to be resolved before merging.
+          default: true
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: call-github-api 
+      name: Turn on branch protection 
+      action: github:branch-protection:create
+      input:
+        repoUrl: "github.com?repo=${{parameters.repoUrl}}&owner=cds-snc"
+        branch: ${{ parameters.branch }}
+        requiredApprovingReviewCount: ${{ parameters.require_approvers_before_merge }}
+        requiredConversationResolution: true
+        requiredCommitSigning: ${{ parameters.require_signed_commits }}
+
+    # Log the values
+    - id: log values
+      name: Log Values
+      action: debug:log
+      input:
+        values:
+          branch: ${{ parameters.branch}}
+          requiredApprovingReviewCount: ${{ parameters.require_approvers_before_merge }}
+          requiredConversationResolution: true
+          requiredCommitSigning: ${{ parameters.require_signed_commits }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+  
+  output:
+    links:
+      - title: Go to branch protection settings
+        icon: github
+        url: https://github.com/cds-snc/${{ parameters.repoUrl }}/settings/branches
