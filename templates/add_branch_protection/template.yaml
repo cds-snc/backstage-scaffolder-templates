@@ -70,7 +70,7 @@ spec:
       name: Turn on branch protection 
       action: github:branch-protection:create
       input:
-        repoUrl: "github.com?repo=${{parameters.repoUrl}}&owner=cds-snc"
+        repoUrl: ${{parameters.repoUrl}}
         branch: ${{ parameters.branch }}
         requiredApprovingReviewCount: ${{ parameters.require_approvers_before_merge }}
         requiredConversationResolution: true
@@ -81,8 +81,8 @@ spec:
       name: Log Values
       action: debug:log
       input:
-        values:
-          branch: ${{ parameters.branch}}
+        message: |
+          "Branch protection has been added to ${{ parameters.repoUrl }} on branch ${{ parameters.branch }} with the following settings:"
           requiredApprovingReviewCount: ${{ parameters.require_approvers_before_merge }}
           requiredConversationResolution: true
           requiredCommitSigning: ${{ parameters.require_signed_commits }}
