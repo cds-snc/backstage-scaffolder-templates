@@ -70,7 +70,7 @@ spec:
       name: Turn on branch protection 
       action: github:branch-protection:create
       input:
-        repoUrl: ${{aparameters.repoUrl}}
+        repoUrl: ${{parameters.repoUrl}}
         branch: ${{ parameters.branch }}
         requiredApprovingReviewCount: ${{ parameters.require_approvers_before_merge }}
         requiredConversationResolution: true
