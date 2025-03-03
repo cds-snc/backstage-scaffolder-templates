@@ -9,7 +9,6 @@ metadata:
 
   tags:
     - github
-    - add
 spec:
   owner: group:cds-snc/internal-sre
   type: file 
@@ -92,4 +91,4 @@ spec:
     links:
       - title: Go to branch protection settings
         icon: github
-        url: https://github.com/cds-snc/${{ parameters.repoUrl }}/settings/branches
+        url: https://github.com/cds-snc/${{ parameters.repoUrl | parseRepoUrl | pick('repo') }}/settings/branches
