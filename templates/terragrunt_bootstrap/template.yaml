@@ -119,7 +119,8 @@ spec:
       name: Log Values
       action: debug:log
       input:
-        values:
+        message: |
+         "Terragrunt bootstrap has been added to ${{ parameters.repoUrl }} with the following settings:"
           product_name: ${{ parameters.product_name }}
           repoUrl: "${{ parameters.repoUrl }}"
           staging_account_id: ${{ parameters.staging_account_id }}

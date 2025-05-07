@@ -71,7 +71,8 @@ spec:
       name: Log Values
       action: debug:log
       input:
-        values:
+        message: |
+         "Hosted zone has been added to ${{ parameters.repoUrl }} with the following settings:"
           product_name: ${{ parameters.product_name }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
           terraformLoc: ${{ parameters.terraformLoc }}

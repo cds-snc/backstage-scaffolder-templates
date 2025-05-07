@@ -79,7 +79,8 @@ spec:
       name: Log Values
       action: debug:log
       input:
-        values:
+        message: |
+         "S3 bucket has been added to ${{ parameters.repoUrl }} with the following settings:"
           bucket_name: ${{ parameters.bucket_name }}
           repoUrl: "${{ parameters.repoUrl }}"
           account: ${{ parameters.account }}

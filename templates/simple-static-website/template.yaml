@@ -127,9 +127,10 @@ spec:
     - id: log values
       name: Log Values
       action: debug:log
+      action: debug:log
       input:
-        values:
-          # repoUrl: "github.com?repo=${{ parameters.repoUrl }}&owner=cds-snc"
+        message: |
+         "Simple Static website configuration has been added to ${{ parameters.repoUrl }} with the following settings:"
           repoUrl: "${{ parameters.repoUrl }}"
           name: ${{ parameters.name }}
           owner: ${{ parameters.owner }}

@@ -119,7 +119,8 @@ spec:
       name: Log Values
       action: debug:log
       input:
-        values:
+        message: |
+           "Spend notifier has been added to ${{ parameters.repoUrl }} with the following settings:"
             create_daily_notification: ${{ parameters.create_daily_notification}}
             create_weekly_notification: ${{ parameters.create_weekly_notification}}
             account_name: ${{ parameters.account_name}}
