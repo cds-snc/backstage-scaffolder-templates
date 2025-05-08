@@ -138,7 +138,8 @@ spec:
       name: Log Values
       action: debug:log
       input:
-        values:
+        message: |
+         "ECS configuraiton has been added to ${{ parameters.repoUrl }} with the following settings:"
           create_cluster: ${{ parameters.create_cluster}}
           cluster_name: ${{ parameters.cluster_name}}
           service_name: ${{ parameters.service_name}}

@@ -124,7 +124,8 @@ spec:
       name: Log Values
       action: debug:log
       input:
-        values:
+        message: |
+         "VPC has been added to ${{ parameters.repoUrl }} with the following settings:"
           vpc_name: ${{ parameters.vpc_name}}
           high_availability: ${{ parameters.high_availability}}
           allow_https_requests_in: ${{ parameters.allow_https_requests_in}}

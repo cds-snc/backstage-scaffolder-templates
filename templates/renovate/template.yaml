@@ -52,8 +52,8 @@ spec:
       name: Log Values
       action: debug:log
       input:
-        values:
-          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+        message: |
+         "Renovate has been added to ${{ parameters.repoUrl }}."
 
     # Create the PR and publish it to Github. 
     - id: renovate_pr 
