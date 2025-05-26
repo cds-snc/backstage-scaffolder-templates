@@ -76,8 +76,8 @@ spec:
         requiredCommitSigning: ${{ parameters.require_signed_commits }}
 
     # Log the values
-    - id: log values
-      name: Log Values
+    - id: log-message
+      name: Log Message 
       action: debug:log
       input:
         message: |

@@ -67,6 +67,18 @@ spec:
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           owner: ${{ parameters.owner }}
 
+    # Log the values
+    - id: log-message
+      name: Log Message
+      action: debug:log
+      input:
+        message: |
+         "Documentation template has been added to ${{ parameters.repoUrl }} with the following settings:"
+          name: ${{ parameters.name }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          repoUrl: "${{ parameters.repoUrl }}"
+
     - id: publish
       name: Publish
       action: publish:github
