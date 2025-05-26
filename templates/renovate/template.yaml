@@ -54,7 +54,6 @@ spec:
       input:
         message: |
          "Renovate has been added to ${{ parameters.repoUrl }}."
-          repoUrl: "${{ parameters.repoUrl }}"
 
     # Create the PR and publish it to Github. 
     - id: renovate_pr 
