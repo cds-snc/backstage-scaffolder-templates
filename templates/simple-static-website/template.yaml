@@ -124,8 +124,9 @@ spec:
           billing_code: ${{ parameters.billing_code }}
           domain_name: ${{ parameters.subdomain }}.${{ parameters.domain }}
 
-    - id: log-values
-      name: Log Values
+    - id: log-message
+      name: Log Message 
+      # This step logs the values that were passed to the template.
       action: debug:log
       input:
         message: |
