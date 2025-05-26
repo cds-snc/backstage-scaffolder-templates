@@ -124,9 +124,8 @@ spec:
           billing_code: ${{ parameters.billing_code }}
           domain_name: ${{ parameters.subdomain }}.${{ parameters.domain }}
 
-    - id: log values
+    - id: log-values
       name: Log Values
-      action: debug:log
       action: debug:log
       input:
         message: |
