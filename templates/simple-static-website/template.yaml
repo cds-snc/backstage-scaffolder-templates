@@ -140,17 +140,36 @@ spec:
           domain_name: ${{ parameters.subdomain }}.${{ parameters.domain }}
 
 
-    # This step publishes the contents of the working directory to GitHub.
+    # This step creates the repository.
     - id: publish
       name: Publish
       action: publish:github
       input:
         allowedHosts: ["github.com"]
         description: This is ${{ parameters.name }}
+        access: ${{ parameters.owner }} 
         repoUrl: "${{ parameters.repoUrl }}"
-        repoVisibility: private
+        repoVisibility: internal 
         defaultBranch: main
         homepage: ${{ parameters.subdomain }}.${{ parameters.domain }}
+
+    # Create the PR and publish it to Github. 
+    - id: publish-pr
+      # This step creates a pull request with the changes made in the previous steps and creates the infrastructure.
+      name: Create Pull Request with infrastructure
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+       allowedHosts: ["github.com"]
+       branchName: "backstage_static_website_template_${{ parameters.product_name }}"
+       title: ' 🧬 Simple static website repo for ${{ parameters.product_name }} 🚀'
+       description: |
+          ## Creation of simple static website project for ${{ parameters.product_name }} with CDS project template elements 
+
+          This is an initial pull request to add generic template specific github actions, LICENSE file and a blank README.md file. This also adds the terraform code to create the infrastructure for a simple static website using an AWS S3 bucket and CloudFront distribution.
+   
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/simple-static-website)* 👷‍♂️⚙️👷‍♀️
+       sourcePath: ./content
 
     # The final step is to register our new component in the catalog.
     - id: register
