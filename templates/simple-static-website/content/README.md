@@ -45,6 +45,7 @@ command to run tests
 ```
 
 ## 📁 Project Structure
+
 Sample project structure:
 ```
 ├── src/
