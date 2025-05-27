@@ -92,8 +92,8 @@ spec:
           terraformLoc: ${{ parameters.terraformLoc }}
 
     # Log the values
-    - id: log values
-      name: Log Values
+    - id: log-message
+      name: Log Message
       action: debug:log
       input:
         message: |

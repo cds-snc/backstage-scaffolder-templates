@@ -101,11 +101,12 @@ spec:
           repoUrl: "${{ parameters.repoUrl }}"
 
     # Log the values
-    - id: log values
-      name: Log Values
+    - id: log-message
+      name: Log Message
       action: debug:log
       input:
-        values:
+         message: |  
+         "Alarms have been added to ${{ parameters.repoUrl }} with the following settings:"
           cloudwatch_log_group: ${{ parameters.cloudwatch_log_group }}
           service_name: ${{ parameters.service_name }}
           error_threshold: ${{ parameters.error_threshold }}

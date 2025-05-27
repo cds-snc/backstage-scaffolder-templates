@@ -57,6 +57,16 @@ spec:
             product_name: ${{ parameters.product_name }}
             repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
             
+    # Log the values
+    - id: log-message
+      name: Log Message
+      action: debug:log
+      input:
+        message: |
+         "Project template has been bootstrapped to ${{ parameters.repoUrl }} with the following settings:"
+          product_name: ${{ parameters.product_name }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+    
     # Create the PR and publish it to Github. 
     - id: project_template_pr 
       name: Create Project Template PR
