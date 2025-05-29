@@ -141,17 +141,18 @@ spec:
 
 
     # This step creates the repository.
-    - id: publish
-      name: Publish
-      action: publish:github
+    - id: create_repo
+      name: Create Repository
+      action: github:repo:create 
       input:
+        repoUrl: ${{ parameters.repoUrl }}"
         allowedHosts: ["github.com"]
         description: This is ${{ parameters.name }}
         access: ${{ parameters.owner }} 
-        repoUrl: "${{ parameters.repoUrl }}"
+        hasIssues: true
         repoVisibility: internal 
-        defaultBranch: main
         homepage: ${{ parameters.subdomain }}.${{ parameters.domain }}
+
 
     # Create the PR and publish it to Github. 
     - id: publish-pr
@@ -170,14 +171,6 @@ spec:
    
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/simple-static-website)* 👷‍♂️⚙️👷‍♀️
        sourcePath: ./content
-
-    # The final step is to register our new component in the catalog.
-    - id: register
-      name: Register
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:
