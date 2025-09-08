@@ -1,0 +1,155 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: ECS Dev Environment 
+  title: Create an ECS Dev Environment 
+  description: |
+    Creates an ECS Dev environment. This includes the directory structure and adds the necessary files to get started.
+
+  tags:
+    - terraform
+    - terragrunt
+    - ecs
+    - dev-environment
+    - bootstrap
+    - aws
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Fill in Terraform/Project Details 
+      required:
+        - product_name
+        - cost_center_code
+        - billing_tag_value
+      properties:
+        product_name:
+          title: Product Name
+          type: string
+          description: The name of the product. Required.
+          ui:help: "Hint: This will be the full name of the product, such as GC Notify"
+          ui:autofocus: true
+        cost_center_code:
+          title: Cost Center Code 
+          type: string
+          description: The cost center code of the product. Required.
+          ui:help: "Hint: This will be something like gc-notify "
+          ui:autofocus: true
+        billing_tag_value:
+          title: Billing tag Value 
+          type: string
+          description: The value of the billing tag. Required. 
+          ui:help: "Hint: This will be something like GCNotify."
+        staging_domain:
+          title: Staging Sub domain (it will be a subdomain of cdssandbox.xyz) 
+          type: string
+          description: The domain that the service will be hosted on in the staging environment. Optional. 
+        production_domain:
+          title: Production Domain (it will be a subdomain of alpha.canada.ca)
+          type: string
+          description: The domain that the service will be hosted on in the production environment. Optional. 
+        billing_code:
+          title: Billing Code  
+          description: The billing code of the service. Optional - default is "CostCentre"
+          type: string 
+          default: "CostCentre" 
+          pattern: "^[a-zA-Z0-9_-]*$"
+
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          description: Name of the repository that is to be bootstrapped. 
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            AllowedOrganizations:
+              - cds-snc
+            allowedOwners:
+              - cds-snc
+
+    - title: AWS Staging Account
+      required:
+        - staging_account_id
+      properties:
+        staging_account_id:
+          title: AWS Staging Account
+          type: string
+          description: The AWS staging account where the infrastructure will be deployed to.
+          pattern: "^[0-9]*$"
+  
+    - title: AWS Production Account
+      required:
+        - production_account_id 
+      properties:
+        production_account_id:
+          title: AWS Production Account
+          type: string
+          description: The AWS production account where the infrastructure will be deployed to.
+          pattern: "^[0-9]*$"
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          product_name: ${{ parameters.product_name }}
+          repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+          staging_account_id: ${{ parameters.staging_account_id }}
+          production_account_id: ${{ parameters.production_account_id }}
+          billing_code: ${{ parameters.billing_code }}
+          billing_tag_value: ${{ parameters.billing_tag_value }}
+          cost_center_code: ${{ parameters.cost_center_code }}
+          staging_domain: ${{ parameters.staging_domain}}
+          production_domain: ${{ parameters.production_domain}}
+
+    # Log the values
+    - id: log values
+      name: Log Values
+      action: debug:log
+      input:
+        message: |
+         "Terragrunt bootstrap has been added to ${{ parameters.repoUrl }} with the following settings:"
+          product_name: ${{ parameters.product_name }}
+          repoUrl: "${{ parameters.repoUrl }}"
+          staging_account_id: ${{ parameters.staging_account_id }}
+          production_account_id: ${{ parameters.production_account_id }}
+          billing_code: ${{ parameters.billing_code }}
+          billing_tag_value: ${{ parameters.billing_tag_value }}
+          cost_center_code: ${{ parameters.cost_center_code }}
+          staging_domain: ${{ parameters.staging_domain}}
+          production_domain: ${{ parameters.production_domain}}
+
+    # Create the terraform PR and publish it to Github. 
+    - id: terraform_pr
+      name: Create terraform PR
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
+       allowedHosts: ["github.com"]
+       branchName: "backstage_terragrunt_ecs_dev_environment${{ parameters.product_name }}"
+       title: '🥾 Bootstraping ECS Dev environment for ${{ parameters.product_name }} 👢'
+       description: |
+          ## Bootstrapping project ${{ parameters.product_name }} with Terraform and Terragrunt
+          This is an initial pull request to create the initial necessary directory structure, devcontainer, github actions, and ECR configuration.
+   
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/terragrunt_bootstrap)* 👷‍♂️⚙️👷‍♀️
+    
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: 'Go to pull request'
+        icon: github
