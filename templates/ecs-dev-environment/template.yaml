@@ -5,7 +5,7 @@ metadata:
   name: ECS Dev Environment 
   title: Create an ECS Dev Environment 
   description: |
-    Creates an ECS Dev environment. This includes the directory structure and adds the necessary files to get started.
+    Creates an ECS Dev environment with foundational AWS infrastructure. This includes the directory structure, devcontainer, GitHub actions, and core AWS services: ECR (Elastic Container Registry), VPC (Virtual Private Cloud), and Route53 hosted zones.
 
   tags:
     - terraform
@@ -14,6 +14,9 @@ metadata:
     - dev-environment
     - bootstrap
     - aws
+    - ecr
+    - vpc
+    - hosted-zone
 spec:
   owner: group:cds-snc/internal-sre
   type: service
@@ -117,12 +120,12 @@ spec:
           production_domain: ${{ parameters.production_domain}}
 
     # Log the values
-    - id: log values
-      name: Log Values
+    - id: log-message
+      name: Log Message
       action: debug:log
       input:
         message: |
-         "Terragrunt bootstrap has been added to ${{ parameters.repoUrl }} with the following settings:"
+         "ECS Dev Environment with foundational AWS infrastructure has been added to ${{ parameters.repoUrl }} with the following settings:"
           product_name: ${{ parameters.product_name }}
           repoUrl: "${{ parameters.repoUrl }}"
           staging_account_id: ${{ parameters.staging_account_id }}
@@ -144,9 +147,24 @@ spec:
        title: '🥾 Bootstraping ECS Dev environment for ${{ parameters.product_name }} 👢'
        description: |
           ## Bootstrapping project ${{ parameters.product_name }} with Terraform and Terragrunt
-          This is an initial pull request to create the initial necessary directory structure, devcontainer, github actions, and ECR configuration.
+          
+          This is an initial pull request to create the foundational infrastructure for an ECS development environment. The template includes:
+          
+          ### 🏗️ Infrastructure Components
+          - **ECR (Elastic Container Registry)**: Container image repository with lifecycle policies
+          - **VPC (Virtual Private Cloud)**: Network infrastructure with public/private subnets across multiple AZs
+          - **Route53 Hosted Zone**: DNS management for domain configuration
+          
+          ### 📁 Project Structure
+          - **Terragrunt configuration**: Environment-specific configurations for staging and production
+          - **DevContainer setup**: Development environment with required tools
+          - **GitHub Actions**: CI/CD workflows for infrastructure deployment
+          
+          ### 🌍 Environment Configuration
+          - **Staging**: Cost-optimized configuration with single NAT gateway
+          - **Production**: High-availability configuration with multiple AZs and NAT gateways
    
-          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/terragrunt_bootstrap)* 👷‍♂️⚙️👷‍♀️
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/ecs-dev-environment)* 👷‍♂️⚙️👷‍♀️
     
   # Outputs are displayed to the user after a successful execution of the template.
   output:
