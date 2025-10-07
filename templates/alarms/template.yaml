@@ -106,7 +106,7 @@ spec:
       action: debug:log
       input:
          message: |  
-         "Alarms have been added to ${{ parameters.repoUrl }} with the following settings:"
+          Alarms have been added to ${{ parameters.repoUrl }} with the following settings:
           cloudwatch_log_group: ${{ parameters.cloudwatch_log_group }}
           service_name: ${{ parameters.service_name }}
           error_threshold: ${{ parameters.error_threshold }}
@@ -123,9 +123,9 @@ spec:
        repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
        allowedHosts: ["github.com"]
        branchName: "backstage_template_alarms_${{ parameters.service_name }}"
-       title: '⏰ Create AWS Error and Warning alarms for ${{ par️ameters.service_name }} 📢'
+       title: '⏰ Create AWS Error and Warning alarms for ${{ parameters.service_name }} 📢'
        description: |
-          ## Creating Error and warning alarms for service ${{ parameters.service_name }} and cloudwatch log group ${{ parameters.cloudwatch_log_group }} with error threshold of ${{ parameters.error_threshold }} and warning threshold of ${{ parameters.warning_threshold }}, respectfully.
+          ## Creating Error and warning alarms for service ${{ parameters.service_name }} and cloudwatch log group ${{ parameters.cloudwatch_log_group }} with error threshold of ${{ parameters.error_threshold }} and warning threshold of ${{ parameters.warning_threshold }}.
         
           The alarms will notify the Slack channel with the webhook url ${{ parameters.slack_webhook_url }} when the thresholds are met.
             
@@ -139,6 +139,7 @@ spec:
     links:
       - title: 'Go to pull request'
         icon: github
+        url: "${{ steps.terraform_pr.output.pullRequestUrl }}"
       - title: 'To view more check documentation'
         icon: docs
         url: "https://github.com/cds-snc/terraform-modules/tree/main/alarms"
