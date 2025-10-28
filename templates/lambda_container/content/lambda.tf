@@ -9,7 +9,7 @@ module "${{ values.product_name }}_lambda" {
     timeout                = ${{ values.timeout }} 
   }
   
-  resource "aws_lambda_alias" "${{ values.product_name }}_lambda_alias" {
+resource "aws_lambda_alias" "${{ values.product_name }}_lambda_alias" {
     name             = "latest"
     description      = "The latest version of the lambda function"
     function_name    = module.${{ values.product_name }}_lambda.function_name
@@ -22,9 +22,24 @@ module "${{ values.product_name }}_lambda" {
     }
   }
   
-  resource "aws_lambda_function_url" "${{ values.product_name }}_lambda_url" {
+resource "aws_lambda_function_url" "${{ values.product_name }}_lambda_url" {
     function_name      = module.${{ values.product_name }}_lambda.function_name
     qualifier          = aws_lambda_alias.${{ values.product_name }}_lambda_alias.name
 
     authorization_type = "NONE"
   }
+
+resource "aws_lambda_permission" "${{ values.product_name }}_invoke_function_url" {
+    statement_id           = "AllowInvokeFunctionUrl"
+    action                 = "lambda:InvokeFunctionUrl"
+    function_name          = module.${{ values.product_name }}_lambda.function_name
+    function_url_auth_type = "NONE"
+    principal              = "*"
+}
+
+resource "aws_lambda_permission" "${{ values.product_name }}_invoke_function" {
+  statement_id  = "AllowInvokeFunction"
+  action        = "lambda:InvokeFunction"
+  function_name = module.${{ values.product_name }}_lambda.function_name
+  principal     = "*"
+}
