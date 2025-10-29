@@ -1,0 +1,120 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: terraform-create-scratch-account
+  title: Create a Scratch Account
+  description: |
+    Creates the terraform code and infrastructure to add a scratch account to your repo.
+
+  tags:
+    - terraform
+    - aws
+    - account
+    - add
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Fill in the Scratch Account Details
+      required:
+        - email_address
+        - first_name
+        - last_name
+        - requested_by
+        - business_unit
+      properties:
+        email_address:
+          title: Email address of user using the scratch account
+          type: string
+          description: The email address of the user who will be using the scratch account. Required.
+          ui:help: "Format: firstname.lastname@cds-snc.ca"
+        first_name:
+          title: First Name
+          type: string
+          description: The first name of the user. Required.
+        last_name:
+          title: Last Name
+          type: string
+          description: The last name of the user. Required.
+        requested_by:
+          title: Requested By
+          type: string
+          description: The name of the person requesting this account. Required.
+          ui:help: "Hint: Your full name (e.g., John Doe)"
+        business_unit:
+          title: Business Unit
+          type: string
+          description: The business unit for this account. Required.
+          enum:
+            - platform
+            - internal_sre
+            - gc_sign_in
+            - dto
+            - outreach
+          enumNames:
+            - Platform
+            - Internal SRE
+            - GC SignIn
+            - DTO
+            - Outreach
+          default: platform 
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          email_address: ${{ parameters.email_address }}
+          first_name: ${{ parameters.first_name }}
+          last_name: ${{ parameters.last_name }}
+          requested_by: ${{ parameters.requested_by }}
+          business_unit: ${{ parameters.business_unit }}
+          repoUrl: "github.com/cds-snc/aft-account-request"
+
+    # Log the values
+    - id: log-message
+      name: Log Message
+      action: debug:log
+      input:
+        message: |
+         "Scratch account configuration has been added to aft-account-request repo with the following settings:"
+          email_address: ${{ parameters.email_address }}
+          first_name: ${{ parameters.first_name }}
+          last_name: ${{ parameters.last_name }}
+          requested_by: ${{ parameters.requested_by }}
+          business_unit: ${{ parameters.business_unit }}
+          repoUrl: "github.com/cds-snc/aft-account-request"
+
+    # Create the terraform PR and publish it to Github.
+    - id: terraform_pr
+      name: Create terraform PR
+      action: publish:github:pull-request
+      input:
+       repoUrl: "github.com?repo=aft-account-request&owner=cds-snc"
+       branchName: "backstage_scratch_account_${{ parameters.first_name }}_${{ parameters.last_name }}"
+       title: '🧾 Create AWS Scratch Account for ${{ parameters.first_name }} ${{ parameters.last_name }}'
+       description: |
+          ## Creating AWS Scratch account for ${{ parameters.first_name }} ${{ parameters.last_name }}
+
+          This is an initial pull request to create an AWS Scratch account and was created based on the Backstage template.
+
+          **Email:** ${{ parameters.email_address }}
+          **Requested by:** ${{ parameters.requested_by }}
+
+          *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/scratch_account)* 👷‍♂️⚙️👷‍♀️
+       targetPath: "terraform"
+    
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: 'Go to pull request'
+        icon: github
