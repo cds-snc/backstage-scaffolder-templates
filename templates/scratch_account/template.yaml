@@ -105,7 +105,7 @@ spec:
        description: |
           ## Creating AWS Scratch account for ${{ parameters.first_name }} ${{ parameters.last_name }}
 
-          This is an initial pull request to create an AWS Scratch account and was created based on the Backstage template.
+          Pull request to create a new AWS Scratch account for ${{ parameters.first_name }} ${{ parameters.last_name }}. The PR was created from a Backstage template.
 
           **Email:** ${{ parameters.email_address }}
           **Requested by:** ${{ parameters.requested_by }}
