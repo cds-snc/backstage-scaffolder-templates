@@ -6,7 +6,7 @@
 {%- set accountName = firstNameTitle + lastNameTitle + '-scratch' -%}
 {%- set accountEmail = 'aws-cloud-pb-ct+' + firstNameLower + '-' + lastNameLower + '@cds-snc.ca' -%}
 {%- set accountAlias = 'cds-snc-' + firstNameLower + '-' + lastNameLower + '-scratch' -%}
-module "{{ moduleName }}" {
+module ${{ moduleName }} {
   source = "./modules/aft-account-request"
 
   control_tower_parameters = {
@@ -36,3 +36,20 @@ module "{{ moduleName }}" {
 
   account_customizations_name = "scratch"
 }
+
+# Assign permission sets to the group for this account
+{%- for permission_set in values.permission_sets %}
+resource "aws_ssoadmin_account_assignment" "{{ moduleName | lower }}_{{ permission_set | lower }}" {
+  instance_arn       = local.sso_instance_arn
+  permission_set_arn = local.permission_set_{{ permission_set | lower }}_arn
+  
+  principal_id   = local.group_{{ values.group_name | lower }}_id
+  principal_type = "GROUP"
+  
+  target_id   = module.{{ moduleName }}.account_id
+  target_type = "AWS_ACCOUNT"
+  
+  depends_on = [module.{{ moduleName }}]
+}
+{%- endfor %}
+{%- endif %}
