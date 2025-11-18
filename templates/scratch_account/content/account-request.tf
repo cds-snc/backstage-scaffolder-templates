@@ -6,7 +6,7 @@
 {%- set accountName = firstNameTitle + lastNameTitle + '-scratch' -%}
 {%- set accountEmail = 'aws-cloud-pb-ct+' + firstNameLower + '-' + lastNameLower + '@cds-snc.ca' -%}
 {%- set accountAlias = 'cds-snc-' + firstNameLower + '-' + lastNameLower + '-scratch' -%}
-module "{{ moduleName }}" {
+module ${{ moduleName }} {
   source = "./modules/aft-account-request"
 
   control_tower_parameters = {
