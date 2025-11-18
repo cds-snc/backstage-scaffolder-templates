@@ -99,10 +99,10 @@ spec:
       name: Create terraform PR
       action: publish:github:pull-request
       input:
-       repoUrl: "github.com?repo=aft-account-request&owner=cds-snc"
-       branchName: "backstage_scratch_account_${{ parameters.first_name }}_${{ parameters.last_name }}"
-       title: '🧾 Create AWS Scratch Account for ${{ parameters.first_name }} ${{ parameters.last_name }}'
-       description: |
+        repoUrl: "github.com?repo=aft-account-request&owner=cds-snc"
+        branchName: "backstage_scratch_account_${{ parameters.first_name }}_${{ parameters.last_name }}"
+        title: '🧾 Create AWS Scratch Account for ${{ parameters.first_name }} ${{ parameters.last_name }}'
+        description: |
           ## Creating AWS Scratch account for ${{ parameters.first_name }} ${{ parameters.last_name }}
 
           Pull request to create a new AWS Scratch account for ${{ parameters.first_name }} ${{ parameters.last_name }}. The PR was created from a Backstage template.
@@ -111,7 +111,9 @@ spec:
           **Requested by:** ${{ parameters.requested_by }}
 
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/scratch_account)* 👷‍♂️⚙️👷‍♀️
-       targetPath: "terraform"
+        teamReviewers:
+          - cds-snc/internal-sre
+        targetPath: "terraform"
     
   # Outputs are displayed to the user after a successful execution of the template.
   output:
