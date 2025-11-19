@@ -6,16 +6,16 @@
 {%- set accountName = firstNameTitle + lastNameTitle + '-scratch' -%}
 {%- set accountEmail = 'aws-cloud-pb-ct+' + firstNameLower + '-' + lastNameLower + '@cds-snc.ca' -%}
 {%- set accountAlias = 'cds-snc-' + firstNameLower + '-' + lastNameLower + '-scratch' -%}
-module ${{ moduleName }} {
+module "${{ moduleName }}" {
   source = "./modules/aft-account-request"
 
   control_tower_parameters = {
-    AccountEmail              = ${{ accountEmail }}
-    AccountName               = ${{ accountName }}
+    AccountEmail              = "${{ accountEmail }}"
+    AccountName               = "${{ accountName }}"
     ManagedOrganizationalUnit = "Sandbox"
-    SSOUserEmail              = ${{ values.email_address }}
-    SSOUserFirstName          = ${{ firstNameTitle }}
-    SSOUserLastName           = ${{ lastNameTitle }}
+    SSOUserEmail              = "${{ values.email_address }}"
+    SSOUserFirstName          = "${{ firstNameTitle }}"
+    SSOUserLastName           = "${{ lastNameTitle }}"
   }
 
   account_tags = {
@@ -31,7 +31,7 @@ module ${{ moduleName }} {
   }
 
   custom_fields = {
-    account_alias = ${{ accountAlias }}
+    account_alias = "${{ accountAlias }}"
   }
 
   account_customizations_name = "scratch"
