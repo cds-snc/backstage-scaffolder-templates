@@ -51,16 +51,16 @@ spec:
           description: The business unit for this account. Required.
           enum:
             - platform
-            - internal_sre
             - gc_sign_in
+            - gc_issue_and_verify
             - dto
-            - outreach
+            - internal_sre 
           enumNames:
             - Platform
-            - Internal SRE
             - GC SignIn
+            - GC Issue & Verify
             - DTO
-            - Outreach
+            - Internal SRE
           default: platform 
 
   # These steps are executed in the scaffolder backend, using data that we gathered
@@ -112,7 +112,7 @@ spec:
 
           *created by: [Backstage Software Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/scratch_account)* 👷‍♂️⚙️👷‍♀️
         teamReviewers:
-          - cds-snc/internal-sre
+          - internal-sre
         targetPath: "terraform"
     
   # Outputs are displayed to the user after a successful execution of the template.
