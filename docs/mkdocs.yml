@@ -1,8 +1,0 @@
-site_name: Backstage Scaffolder Templates Documentation
-site_description: Documentation for CDS Backstage Scaffolder Templates
-
-plugins: 
-  - techdocs-core
-
-nav:
-  - Home: README.md 
