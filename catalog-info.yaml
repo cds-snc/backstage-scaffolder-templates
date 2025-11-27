@@ -4,7 +4,7 @@ metadata:
   name: backstage-scaffolder-templates
   description: CDS managed Backstage templates
   annotations:
-    backstage.io/techdocs-ref: dir:./docs
+    backstage.io/techdocs-ref: dir:.
 spec:
   type: website
   owner: group:cds-snc/internal-sre
