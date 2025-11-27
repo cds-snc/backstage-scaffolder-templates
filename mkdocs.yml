@@ -6,5 +6,5 @@ plugins:
   - techdocs-core
   
 nav:
-  - Home: README.md
+  - Home: docs/README.md
 
