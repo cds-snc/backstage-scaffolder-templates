@@ -55,7 +55,7 @@ jobs:
       - name: Build and publish documentation
         run: |
           # Generate
-          npx techdocs-cli generate --no-docker
+          npx techdocs-cli generate --no-docker --verbose
 
           # Publish
           npx techdocs-cli publish --publisher-type awsS3 --storage-name ${{ secrets.AWS_S3_TECHDOCS_BUCKET }} --entity ${{ steps.get_entity.outputs.ENTITY_INFO }}
