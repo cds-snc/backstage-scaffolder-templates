@@ -2,8 +2,9 @@ site_name: Backstage Scaffolder Templates
 
 site_description: CDS managed scaffolder templates for Backstage
 
+plugins:
+  - techdocs-core
+  
 nav:
   - Home: README.md
 
-plugins:
-  - techdocs-core
