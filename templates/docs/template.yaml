@@ -152,7 +152,52 @@ spec:
           2. Customize `${{ parameters.docs_directory }}/index.md` with your content if you want it to be different from README.md
           3. Merge this PR to enable TechDocs
           4. View your docs in Backstage!
-          
+
+          ### If catalog-info.yaml ALREADY exists:
+          You need to check if it has the TechDocs annotation and add it if missing.
+
+          ## Required Manual Step
+          Add the following line under `metadata.annotations` in your existing `catalog-info.yaml` ONLY if missing:
+
+         ```yaml
+         metadata:
+         annotations:
+             backstage.io/techdocs-ref: dir:.
+         ```
+
+         ## Why is this manual?
+         Backstage scaffolder templates use `replace: false` to protect your existing files. This means:
+         - If you don't have a `catalog-info.yaml`, we create one with the annotation
+         - If you already have one, we don't modify it (to prevent accidental data loss)
+
+         ## Example
+         ### Before:
+         ```yaml
+         apiVersion: backstage.io/v1alpha1
+         kind: Component
+         metadata:
+         name: my-component
+         annotations:
+             github.com/project-slug: cds-snc/my-repo
+         spec:
+         type: service
+         owner: my-team
+         ```
+
+         ### After:
+         ```yaml
+         apiVersion: backstage.io/v1alpha1
+         kind: Component
+         metadata:
+         name: my-component
+         annotations:
+             github.com/project-slug: cds-snc/my-repo
+             backstage.io/techdocs-ref: dir:.  # ← ADD THIS LINE
+         spec:
+         type: service
+         owner: my-team
+         ```
+
           *Created by: [Backstage Scaffolder Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/add_techdocs)* 📖
 
   output:

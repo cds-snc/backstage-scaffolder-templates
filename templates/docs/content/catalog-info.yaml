@@ -2,11 +2,11 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: ${{ values.product_name | lower | replace(' ', '-') }}
-  description: ${{ values.product_description | dump }}
+  description: ${{ values.product_description }}
   annotations:
     github.com/project-slug: ${{ values.destination.owner }}/${{ values.destination.repo }}
     backstage.io/techdocs-ref: dir:.
 spec:
   type: website 
   lifecycle: production
-  owner: ${{ values.owner | dump }}
+  owner: ${{ values.owner }}
