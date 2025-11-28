@@ -2,7 +2,9 @@ site_name: "Backstage Scaffolder Templates"
 
 plugins:
   - techdocs-core
-  
+
 nav:
   - Home: README.md
-
+  - Templates Overview: templates-overview.md
+  - Creating Templates: creating-templates.md
+  - Best Practices: best-practices.md
