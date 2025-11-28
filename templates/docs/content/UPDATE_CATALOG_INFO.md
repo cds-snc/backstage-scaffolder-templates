@@ -10,7 +10,7 @@ You need to check if it has the TechDocs annotation and add it if missing.
 
 ## Required Manual Step
 
-Add the following line under `metadata.annotations` in your existing `catalog-info.yaml`:
+Add the following line under `metadata.annotations` in your existing `catalog-info.yaml` ONLY if missing:
 
 ```yaml
 metadata:

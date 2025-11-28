@@ -111,6 +111,7 @@ spec:
           - .github/workflows/backstage_techdocs.yml
           - .github/workflows/scripts/get_entity_info.sh
           - UPDATE_CATALOG_INFO.md
+          - DOCS_README.md
           
           ⚠️ Note: If files already exist in ${{ parameters.docs_directory }}/, they will be preserved.
           Only missing files will be added.
@@ -148,15 +149,9 @@ spec:
           
           ### Next Steps
           1. Review the changes in this PR
-          2. Customize `docs/index.md` with your content
+          2. Customize `${{ parameters.docs_directory }}/index.md` with your content if you want it to be different from README.md
           3. Merge this PR to enable TechDocs
           4. View your docs in Backstage!
-          
-          ### Testing Locally
-          ```bash
-          npx @techdocs/cli generate --no-docker
-          npx @techdocs/cli serve
-          ```
           
           *Created by: [Backstage Scaffolder Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/add_techdocs)* 📖
 

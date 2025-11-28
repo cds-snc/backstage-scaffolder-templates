@@ -18,8 +18,8 @@ If your repository already has a `docs/` directory:
 Choose `docs` as the directory name. The template will:
 - **Preserve existing files** - Your current docs/ content won't be overwritten
 - Add `index.md` only if it doesn't exist
-- Add mkdocs.yml to configure TechDocs
-- Add GitHub workflow for publishing
+- Add mkdocs.yml to configure TechDocs only if it does not exist
+- Add GitHub workflow for publishing only if it does not exist
 
 ### Option 2: Use Separate Directory
 Choose `documentation/` as the directory name. The template will:
@@ -38,7 +38,7 @@ The `replace: false` setting ensures no existing files are overwritten.
 1. Run this template from Backstage
 2. Provide the repository URL and component name
 3. Review the generated PR
-4. Follow instructions in `UPDATE_CATALOG_INFO.md` to add the TechDocs annotation
+4. Follow instructions in `UPDATE_CATALOG_INFO.md` to add the TechDocs annotation ONLY if needed. 
 5. Merge the PR
 
 ## Manual Steps Required
@@ -47,7 +47,7 @@ After the PR is created, you'll need to:
 
 1. **Review the PR changes**
 2. **Merge the PR** to add TechDocs files to your repository
-3. **Manually add the TechDocs annotation** to your `catalog-info.yaml`:
+3. **Manually add the TechDocs annotation** to your `catalog-info.yaml` ONLY if it does not already exist:
 
 ```yaml
 metadata:
