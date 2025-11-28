@@ -464,6 +464,7 @@ resource "aws_instance" "{{ resource_name }}" {
 - Check that the template is in the correct directory
 - Ensure Backstage is configured to read from your repository
 - Refresh the Backstage catalog
+- See the DevTools plugin to see if there are debugging options/messages.
 
 ### Parameters Not Working
 
