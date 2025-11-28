@@ -1,6 +1,9 @@
-site_name: Digital Transformation Office - BTN Toolbox 
-
-site_description: A collection of scripts used by the Digital Transformation Office.
+{%- set component_name = values.product_name | lower | replace(' ', '-') -%}
+{%- set docs_dir = values.docs_directory | default('docs') -%}
+site_name: "${{ values.product_name }}"
 
 plugins:
   - techdocs-core
+
+nav:
+  - Home: index.md

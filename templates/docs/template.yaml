@@ -1,103 +1,170 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: docs-template
-  title: Documentation Template
-  description: Create a new standalone documentation project
+  name: add-techdocs
+  title: Add TechDocs to Existing Repository
+  description: |
+    Adds TechDocs configuration and documentation structure to an existing repository.
+    This will create a PR with mkdocs.yml, docs/ folder, and update catalog-info.yaml with the techdocs annotation.
+
   tags:
-    - recommended
     - techdocs
     - mkdocs
+    - documentation
+    - add
 spec:
-  owner: backstage/techdocs-core
+  owner: group:cds-snc/internal-sre
   type: documentation
 
   parameters:
-    - title: Fill in some steps
-      required:
-        - name
-        - description
-      properties:
-        name:
-          title: Name
-          type: string
-          description: Unique name of the component
-          ui:field: EntityNamePicker
-          ui:autofocus: true
-        description:
-          title: Description
-          type: string
-          description: A description for the component
-        owner:
-          title: Owner
-          type: string
-          description: Owner of the component
-          ui:field: OwnerPicker
-          ui:options:
-            allowedKinds:
-              - Group
-    - title: Choose a location
+    - title: Repository Information
       required:
         - repoUrl
       properties:
         repoUrl:
-          title: Repository Location
+          title: Repository URL
           type: string
+          description: The GitHub repository to add TechDocs to
           ui:field: RepoUrlPicker
           ui:options:
             allowedHosts:
               - github.com
-            AllowedOrganizations:
-              - cds-snc
             allowedOwners:
               - cds-snc
 
-  # This template is meant to be used on top of an existing template.
-  # By adding the following and fetching from an absolute URL you can
-  # add in the docs template
+    - title: Documentation Details
+      required:
+        - product_name
+        - owner
+      properties:
+        product_name:
+          title: Application/Product Name
+          type: string
+          description: The application or product name for your documentation site
+          ui:autofocus: true
+        product_description:
+          title: Product Description
+          type: string
+          description: A brief description of your product or application
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component (e.g., team name or group)
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: [Group, User]
+        docs_directory:
+          title: Documentation Directory Name
+          type: string
+          description: Name for the documentation directory (default directory is 'docs' but you can use 'documentation' if preferred)
+          default: docs
+          enum:
+            - docs
+            - documentation
+          ui:help: "Select 'documentation' if a 'docs/' directory already exists in your repository or you want to use 'documentation/' instead."
+        copy_readme:
+          title: Copy README.md to Documentation directory 
+          type: boolean
+          description: Copy the root README.md to the documentation directory as index.md
+          default: true
+          ui:help: "If enabled, your existing README.md will be copied to serve as the documentation homepage. This is the initial recommended approach."
+
   steps:
-    - id: fetch
-      name: Template Docs Content 
+    - id: fetch-base
+      name: Fetch Documentation Template
       action: fetch:template
       input:
         url: ./content
+        replace: false
         values:
-          name: ${{ parameters.name }}
-          description: ${{ parameters.description }}
-          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+          product_name: ${{ parameters.product_name }}
           owner: ${{ parameters.owner }}
+          product_description: ${{ parameters.product_description }}
+          docs_directory: ${{ parameters.docs_directory }}
+          destination: ${{ parameters.repoUrl | parseRepoUrl }}
 
-    # Log the values
+    - id: fetch-readme
+      name: Fetch README from repository
+      if: ${{ parameters.copy_readme }}
+      action: fetch:plain:file
+      input:
+        url: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}/blob/main/README.md
+        targetPath: ./${{ parameters.docs_directory }}/index.md
+
     - id: log-message
       name: Log Message
       action: debug:log
       input:
         message: |
-         "Documentation template has been added to ${{ parameters.repoUrl }} with the following settings:"
-          name: ${{ parameters.name }}
-          description: ${{ parameters.description }}
-          owner: ${{ parameters.owner }}
-          repoUrl: "${{ parameters.repoUrl }}"
+          Adding TechDocs to repository with the following settings:
+          Repository: ${{ parameters.repoUrl }}
+          Product Name: ${{ parameters.product_name }}
+          Product Description: ${{ parameters.product_description }}
+          Documentation Directory: ${{ parameters.docs_directory }}/
+          {% if parameters.copy_readme %}Copy README.md: Yes (as index.md){% else %}Copy README.md: No{% endif %}
+          
+          Files to be added (existing files will NOT be overwritten):
+          - mkdocs.yml
+          - ${{ parameters.docs_directory }}/index.md{% if parameters.copy_readme %} (from README.md){% endif %}
+          - catalog-info.yaml (only if it doesn't exist)
+          - .github/workflows/backstage_techdocs.yml
+          - .github/workflows/scripts/get_entity_info.sh
+          - UPDATE_CATALOG_INFO.md
+          
+          ⚠️ Note: If files already exist in ${{ parameters.docs_directory }}/, they will be preserved.
+          Only missing files will be added.
+          
+          📋 catalog-info.yaml handling:
+          - If catalog-info.yaml does NOT exist: A new one will be created with TechDocs annotation ✅
+          - If catalog-info.yaml already exists: You need to manually add the TechDocs annotation (see UPDATE_CATALOG_INFO.md)
+          
+          ⚠️ IMPORTANT: If you already have a catalog-info.yaml file:
+          See UPDATE_CATALOG_INFO.md in this PR for instructions on adding the TechDocs annotation.
 
-    - id: publish
-      name: Publish
-      action: publish:github
+    - id: publish-pr
+      name: Create Pull Request
+      action: publish:github:pull-request
       input:
-        allowedHosts: ["github.com"]
-        description: This is ${{ parameters.name }}
         repoUrl: ${{ parameters.repoUrl }}
-
-    - id: register
-      name: Register
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
+        branchName: add-techdocs
+        title: '📚 Add TechDocs Documentation'
+        description: |
+          ## Add TechDocs Configuration
+          
+          This PR adds TechDocs support to the repository.
+          
+          ### Changes
+          - ✅ Added `mkdocs.yml` configuration
+          - ✅ Created `${{ parameters.docs_directory }}/` directory with initial documentation
+          - ✅ Added GitHub Actions workflow for TechDocs publishing
+          - ✅ Added helper script for extracting catalog entity info
+          - ✅ Added/Updated `catalog-info.yaml` with TechDocs configuration
+          
+          **⚠️ IMPORTANT:** If your repository already has a `catalog-info.yaml` file, you MUST manually add the TechDocs annotation after merging. See `UPDATE_CATALOG_INFO.md` for instructions.
+          
+          ### What is TechDocs?
+          TechDocs is Backstage's built-in documentation solution that creates beautiful documentation sites from Markdown files.
+          
+          ### Next Steps
+          1. Review the changes in this PR
+          2. Customize `docs/index.md` with your content
+          3. Merge this PR to enable TechDocs
+          4. View your docs in Backstage!
+          
+          ### Testing Locally
+          ```bash
+          npx @techdocs/cli generate --no-docker
+          npx @techdocs/cli serve
+          ```
+          
+          *Created by: [Backstage Scaffolder Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/add_techdocs)* 📖
 
   output:
     links:
-      - title: Repository
-        url: ${{ steps.publish.output.remoteUrl }}
-      - title: Open in catalog
-        icon: catalog
-        entityRef: ${{ steps.register.output.entityRef }}
+      - title: View Pull Request
+        url: ${{ steps['publish-pr'].output.remoteUrl }}
+        icon: github
+      - title: TechDocs Documentation
+        url: https://backstage.io/docs/features/techdocs/
+        icon: docs
