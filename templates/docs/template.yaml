@@ -142,7 +142,7 @@ spec:
           - ✅ Added helper script for extracting catalog entity info
           - ✅ Added/Updated `catalog-info.yaml` with TechDocs configuration
           
-          **⚠️ IMPORTANT:** If your repository already has a `catalog-info.yaml` file, you MUST manually add the TechDocs annotation after merging. See `UPDATE_CATALOG_INFO.md` for instructions.
+          **⚠️ IMPORTANT:** If your repository already has a `catalog-info.yaml` file, you MUST manually add the TechDocs annotation after merging. 
           
           ### What is TechDocs?
           TechDocs is Backstage's built-in documentation solution that creates beautiful documentation sites from Markdown files.
@@ -159,44 +159,44 @@ spec:
           ## Required Manual Step
           Add the following line under `metadata.annotations` in your existing `catalog-info.yaml` ONLY if missing:
 
-         ```yaml
-         metadata:
-         annotations:
-             backstage.io/techdocs-ref: dir:.
-         ```
+          ```yaml
+          metadata:
+          annotations:
+              backstage.io/techdocs-ref: dir:.
+          ```
 
-         ## Why is this manual?
-         Backstage scaffolder templates use `replace: false` to protect your existing files. This means:
-         - If you don't have a `catalog-info.yaml`, we create one with the annotation
-         - If you already have one, we don't modify it (to prevent accidental data loss)
+          ## Why is this manual?
+          Backstage scaffolder templates use `replace: false` to protect your existing files. This means:
+          - If you don't have a `catalog-info.yaml`, we create one with the annotation
+          - If you already have one, we don't modify it (to prevent accidental data loss)
 
-         ## Example
-         ### Before:
-         ```yaml
-         apiVersion: backstage.io/v1alpha1
-         kind: Component
-         metadata:
-         name: my-component
-         annotations:
-             github.com/project-slug: cds-snc/my-repo
-         spec:
-         type: service
-         owner: my-team
-         ```
+          ## Example
+          ### Before:
+          ```yaml
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+          name: my-component
+          annotations:
+              github.com/project-slug: cds-snc/my-repo
+          spec:
+          type: service
+          owner: my-team
+          ```
 
-         ### After:
-         ```yaml
-         apiVersion: backstage.io/v1alpha1
-         kind: Component
-         metadata:
-         name: my-component
-         annotations:
-             github.com/project-slug: cds-snc/my-repo
-             backstage.io/techdocs-ref: dir:.  # ← ADD THIS LINE
-         spec:
-         type: service
-         owner: my-team
-         ```
+          ### After:
+          ```yaml
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+          name: my-component
+          annotations:
+              github.com/project-slug: cds-snc/my-repo
+              backstage.io/techdocs-ref: dir:.  # ← ADD THIS LINE
+          spec:
+          type: service
+          owner: my-team
+          ```
 
           *Created by: [Backstage Scaffolder Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/add_techdocs)* 📖
 
