@@ -69,6 +69,12 @@ spec:
           description: Copy the root README.md to the documentation directory as index.md
           default: true
           ui:help: "If enabled, your existing README.md will be copied to serve as the documentation homepage. This is the initial recommended approach."
+        catalog_info_exists:
+          title: Does catalog-info.yaml already exist in your repository? If so, check this box.
+          type: boolean
+          description: Check this if your repository already has a catalog-info.yaml file
+          default: false
+          ui:help: "If checked, catalog-info.yaml will NOT be added to the PR. You'll need to manually add the techdocs annotation."
 
   steps:
     - id: fetch-base
@@ -76,13 +82,20 @@ spec:
       action: fetch:template
       input:
         url: ./content
-        replace: false
         values:
           product_name: ${{ parameters.product_name }}
           owner: ${{ parameters.owner }}
           product_description: ${{ parameters.product_description }}
           docs_directory: ${{ parameters.docs_directory }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
+
+    - id: remove-catalog-if-exists
+      name: Remove catalog-info.yaml (user indicated it already exists)
+      if: ${{ parameters.catalog_info_exists }}
+      action: fs:delete
+      input:
+        files:
+          - catalog-info.yaml
 
     - id: fetch-readme
       name: Fetch README from repository
@@ -110,16 +123,18 @@ spec:
           - catalog-info.yaml (only if it doesn't exist)
           - .github/workflows/backstage_techdocs.yml
           - .github/workflows/scripts/get_entity_info.sh
+          - UPDATE_CATALOG_INFO.md
+          - DOCS_README.md
           
           ⚠️ Note: If files already exist in ${{ parameters.docs_directory }}/, they will be preserved.
           Only missing files will be added.
           
           📋 catalog-info.yaml handling:
           - If catalog-info.yaml does NOT exist: A new one will be created with TechDocs annotation ✅
-          - If catalog-info.yaml already exists: You need to manually add the TechDocs annotation
+          - If catalog-info.yaml already exists: You need to manually add the TechDocs annotation (see UPDATE_CATALOG_INFO.md)
           
           ⚠️ IMPORTANT: If you already have a catalog-info.yaml file:
-          You must add the techdocs-ref line in your catalog-info file.
+          See UPDATE_CATALOG_INFO.md in this PR for instructions on adding the TechDocs annotation.
 
     - id: publish-pr
       name: Create Pull Request
@@ -138,7 +153,7 @@ spec:
           - ✅ Created `${{ parameters.docs_directory }}/` directory with initial documentation
           - ✅ Added GitHub Actions workflow for TechDocs publishing
           - ✅ Added helper script for extracting catalog entity info
-          - ✅ Added `catalog-info.yaml` with TechDocs configuration (if applicable)
+          - ✅ Added/Updated `catalog-info.yaml` with TechDocs configuration
           
           **⚠️ IMPORTANT:** If your repository already has a `catalog-info.yaml` file, you MUST manually add the TechDocs annotation after merging. 
           
