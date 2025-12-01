@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_ACCOUNT: ${{ secrets.AWS_S3_TECHDOCS_ACCOUNT }}
+  AWS_ACCOUNT: {% raw %}${{ secrets.AWS_S3_TECHDOCS_ACCOUNT }}{% endraw %}
   AWS_REGION: ca-central-1
 
 permissions:
@@ -39,7 +39,7 @@ jobs:
         id: get_entity
         run: |
           ENTITY_INFO=$(.github/workflows/scripts/get_entity_info.sh)
-          echo "ENTITY_INFO=${ENTITY_INFO}" >> $GITHUB_OUTPUT
+          echo "ENTITY_INFO=${ENTITY_INFO}" >> {% raw %}$GITHUB_OUTPUT{% endraw %}
 
       - name: Install dependencies
         run: |
@@ -49,9 +49,9 @@ jobs:
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df # v4.2.1
         with:
-          role-to-assume: arn:aws:iam::${{env.AWS_ACCOUNT}}:role/gh_techdocs_role
+          role-to-assume: arn:aws:iam::{% raw %}${{env.AWS_ACCOUNT}}{% endraw %}:role/gh_techdocs_role
           role-session-name: gh_techdocs_role
-          aws-region: ${{env.AWS_REGION}}
+          aws-region: {% raw %}${{env.AWS_REGION}}{% endraw %}
 
       - name: Build and publish documentation
         run: |
@@ -59,4 +59,4 @@ jobs:
           npx techdocs-cli generate --no-docker --verbose
 
           # Publish
-          npx techdocs-cli publish --publisher-type awsS3 --storage-name ${{ secrets.AWS_S3_TECHDOCS_BUCKET }} --entity ${{ steps.get_entity.outputs.ENTITY_INFO }}
+          npx techdocs-cli publish --publisher-type awsS3 --storage-name {% raw %}${{ secrets.AWS_S3_TECHDOCS_BUCKET }}{% endraw %} --entity {% raw %}${{ steps.get_entity.outputs.ENTITY_INFO }}{% endraw %}
