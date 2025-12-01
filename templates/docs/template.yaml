@@ -129,7 +129,7 @@ spec:
           
           📋 catalog-info.yaml handling:
           - If catalog-info.yaml does NOT exist: A new one will be created with TechDocs annotation ✅
-          - If catalog-info.yaml already exists: You need to manually add the TechDocs annotation (see UPDATE_CATALOG_INFO.md)
+          - If catalog-info.yaml already exists: You need to manually add the TechDocs annotation.
           
           ⚠️ IMPORTANT: If you already have a catalog-info.yaml file:
           You must add the techdocs-ref line in your catalog-info file.
