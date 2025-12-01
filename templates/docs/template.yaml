@@ -123,8 +123,6 @@ spec:
           - catalog-info.yaml (only if it doesn't exist)
           - .github/workflows/backstage_techdocs.yml
           - .github/workflows/scripts/get_entity_info.sh
-          - UPDATE_CATALOG_INFO.md
-          - DOCS_README.md
           
           ⚠️ Note: If files already exist in ${{ parameters.docs_directory }}/, they will be preserved.
           Only missing files will be added.
@@ -134,7 +132,7 @@ spec:
           - If catalog-info.yaml already exists: You need to manually add the TechDocs annotation (see UPDATE_CATALOG_INFO.md)
           
           ⚠️ IMPORTANT: If you already have a catalog-info.yaml file:
-          See UPDATE_CATALOG_INFO.md in this PR for instructions on adding the TechDocs annotation.
+          You must add the techdocs-ref line in your catalog-info file.
 
     - id: publish-pr
       name: Create Pull Request
@@ -153,7 +151,7 @@ spec:
           - ✅ Created `${{ parameters.docs_directory }}/` directory with initial documentation
           - ✅ Added GitHub Actions workflow for TechDocs publishing
           - ✅ Added helper script for extracting catalog entity info
-          - ✅ Added/Updated `catalog-info.yaml` with TechDocs configuration
+          - ✅ Added `catalog-info.yaml` with TechDocs configuration (if applicable)
           
           **⚠️ IMPORTANT:** If your repository already has a `catalog-info.yaml` file, you MUST manually add the TechDocs annotation after merging. 
           
