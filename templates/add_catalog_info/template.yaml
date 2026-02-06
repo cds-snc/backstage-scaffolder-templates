@@ -1,0 +1,228 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: add-catalog-info
+  title: Add or Update catalog-info.yaml
+  description: |
+    Adds a new catalog-info.yaml file to an existing repository, or updates an existing one with new values.
+    This template will create a PR with the catalog-info.yaml file.
+
+  tags:
+    - catalog
+    - backstage
+    - component
+    - add
+spec:
+  owner: group:cds-snc/internal-sre
+  type: service
+
+  parameters:
+    - title: Repository Information
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository URL
+          type: string
+          description: The GitHub repository to add catalog-info.yaml to
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            allowedOwners:
+              - cds-snc
+
+    - title: Project Details
+      required:
+        - project_name 
+        - owner
+      properties:
+        project_name:
+          title: Project Name
+          type: string
+          description: The name of the project (will be converted to lowercase with dashes)
+          ui:autofocus: true
+          ui:help: "Example: my-awesome-service"
+        project_title:
+          title: Project Title
+          type: string
+          description: A human-readable title for the project
+          ui:help: "Example: My Awesome Service"
+        project_description:
+          title: Project Description
+          type: string
+          description: A brief description of the project
+          ui:widget: textarea
+          ui:options:
+            rows: 3
+        project_type:
+          title: Project Type
+          type: string
+          description: The type of project
+          default: service
+          enum:
+            - service
+            - website
+            - library
+            - documentation
+            - tool
+          enumNames:
+            - Service
+            - Website
+            - Library
+            - Documentation
+            - Tool
+        owner:
+          title: Owner
+          type: string
+          description: The team or group that owns this project
+          enum:
+            - group:cds-snc/internal-sre
+            - group:cds-snc/notify
+            - group:cds-snc/gc-sign-in
+            - group:cds-snc/gc-issue-verify
+            - group:cds-snc/platform-core
+            - group:cds-snc/gc-forms
+            - group:cds-snc/gc-design-system
+            - group:cds-snc/security
+            - group:cds-snc/website
+            - group:cds-snc/other
+          enumNames:
+            - Internal SRE
+            - Notify
+            - GC Sign In
+            - GC Issue & Verify
+            - Platform Core
+            - GC Forms
+            - GC Design System
+            - Security
+            - Website
+            - Other
+          default: group:cds-snc/internal-sre
+        lifecycle:
+          title: Lifecycle
+          type: string
+          description: The lifecycle stage of the project 
+          default: production
+          enum:
+            - experimental
+            - development
+            - production
+            - deprecated
+          enumNames:
+            - Experimental
+            - Development
+            - Production
+            - Deprecated
+        system:
+          title: System
+          type: string
+          description: The system this component belongs to (optional)
+          ui:help: "Example: artist-engagement-portal, playlist-system. A system is a collection of related components."
+        domain:
+          title: Domain
+          type: string
+          description: The domain this component belongs to (optional)
+          ui:help: "Example: artists, payments, content-delivery. A domain groups a collection of systems that share terminology, domain models, business purpose, or documentation."
+
+    - title: Advanced Options
+      properties:
+        add_techdocs:
+          title: Add TechDocs annotation
+          type: boolean
+          description: Add the TechDocs annotation to enable documentation
+          default: false
+        techdocs_ref:
+          title: TechDocs Reference
+          type: string
+          description: TechDocs reference path
+          default: dir:.
+          ui:help: "Usually 'dir:.' for documentation in the same repo"
+        additional_annotations:
+          title: Additional Annotations
+          type: object
+          description: Additional annotations (key-value pairs)
+          ui:help: "Example:  backstage.io/adr-location: adr_location/"
+          additionalProperties:
+            type: string
+
+  steps:
+    - id: fetch-template
+      name: Fetch catalog-info template
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          project_name: ${{ parameters.project_name | lower | replace(' ', '-') }}
+          project_title: ${{ parameters.project_title }}
+          project_description: ${{ parameters.project_description }}
+          project_type: ${{ parameters.project_type }}
+          owner: ${{ parameters.owner }}
+          lifecycle: ${{ parameters.lifecycle }}
+          system: ${{ parameters.system }}        
+          domain: ${{ parameters.domain }}          
+          add_techdocs: ${{ parameters.add_techdocs }}
+          techdocs_ref: ${{ parameters.techdocs_ref }}
+          additional_annotations: ${{ parameters.additional_annotations }}
+          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+
+    - id: log-message
+      name: Log Message
+      action: debug:log
+      input:
+        message: |
+          Adding catalog-info.yaml to repository with the following settings:
+          Repository: ${{ parameters.repoUrl }}
+          Project Name: ${{ parameters.project_name | lower | replace(' ', '-') }}
+          Project Type: ${{ parameters.project_type }}
+          Owner: ${{ parameters.owner }}
+          Lifecycle: ${{ parameters.lifecycle }}
+          {% if parameters.system %}System: ${{ parameters.system }}{% endif %}
+          {% if parameters.domain %}Domain: ${{ parameters.domain }}{% endif %}
+          Add TechDocs: ${{ parameters.add_techdocs }}
+          
+          Note: If catalog-info.yaml already exists, this will create a PR to update it.
+
+    - id: publish-pr
+      name: Create Pull Request
+      action: publish:github:pull-request
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        branchName: add-catalog-info
+        title: '📋 Add/Update catalog-info.yaml'
+        description: |
+          ## Add/Update Backstage Catalog Project 
+          
+          This PR adds or updates the `catalog-info.yaml` file for this repository.
+          
+          ### Project Details
+          - **Name:** `${{ parameters.project_name | lower | replace(' ', '-') }}`
+          - **Type:** `${{ parameters.project_type }}`
+          - **Owner:** `${{ parameters.owner }}`
+          - **Lifecycle:** `${{ parameters.lifecycle }}`
+          {% if parameters.system %}- **System:** `${{ parameters.system }}`{% endif %}
+          {% if parameters.domain %}- **Domain:** `${{ parameters.domain }}`{% endif %}
+          {% if parameters.add_techdocs %}- **TechDocs:** Enabled (ref: `${{ parameters.techdocs_ref }}`){% endif %}
+          
+          ### What is catalog-info.yaml?
+          The `catalog-info.yaml` file is used by Backstage to register and track this project in the software catalog. 
+          It provides metadata about the project including ownership, lifecycle stage, and relationships to other projects.
+          
+          ### Next Steps
+          1. Review the catalog-info.yaml file in this PR
+          2. Make any necessary adjustments
+          3. Merge this PR to register the project in Backstage
+          4. The project will appear in the Backstage catalog shortly after merge
+          
+          **Note:** If a catalog-info.yaml file already exists, please review the changes carefully to ensure important information is not lost.
+          
+          *Created by: [Backstage Scaffolder Template](https://github.com/cds-snc/backstage-scaffolder-templates/tree/main/templates/add_catalog_info)* 📋
+
+  output:
+    links:
+      - title: View Pull Request
+        url: ${{ steps['publish-pr'].output.remoteUrl }}
+        icon: github
+      - title: Backstage Catalog Documentation
+        url: https://backstage.io/docs/features/software-catalog/
+        icon: docs

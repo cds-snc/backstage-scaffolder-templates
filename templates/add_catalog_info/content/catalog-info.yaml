@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.project_name }}
+{% if values.project_title %}  title: ${{ values.project_title }}
+{% endif %}{% if values.project_description %}  description: ${{ values.project_description }}
+{% endif %}  annotations:
+    github.com/project-slug: ${{ values.destination.owner }}/${{ values.destination.repo }}
+{% if values.add_techdocs %}    backstage.io/techdocs-ref: ${{ values.techdocs_ref }}
+{% endif %}{% if values.additional_annotations %}{% for key, value in values.additional_annotations %}    {{ key }}: {{ value }}
+{% endfor %}{% endif %}spec:
+  type: ${{ values.project_type }}
+  lifecycle: ${{ values.lifecycle }}
+  owner: ${{ values.owner }}
+{% if values.system %}  system: ${{ values.system }}
+{% endif %}{% if values.domain %}  domain: ${{ values.domain }}
+{% endif %}
