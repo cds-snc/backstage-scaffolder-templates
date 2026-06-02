@@ -53,15 +53,15 @@ Have these ready before running it:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `product_name` | ✅ | Product name; used to name the function (`<product_name>-lambda`) and the Terraform resources. |
-| `billing_code` | ✅ | Billing/cost-centre tag value. |
-| `ecr_repository_name` | ✅ | Name of the existing ECR repository. URL and ARN are derived from it. |
-| `ecr_tag` | ✅ | Image tag to deploy (e.g. `latest`). |
-| `cloudfront_distribution_id` | ✅ | ID of the existing CloudFront distribution allowed to invoke the function. |
+| `product_name` | Required | Product name; used to name the function (`<product_name>-lambda`) and the Terraform resources. |
+| `billing_code` | Required | Billing/cost-centre tag value. |
+| `ecr_repository_name` | Required | Name of the existing ECR repository. URL and ARN are derived from it. |
+| `ecr_tag` | Required | Image tag to deploy (e.g. `latest`). |
+| `cloudfront_distribution_id` | Required | ID of the existing CloudFront distribution allowed to invoke the function. |
 | `memory` | optional | Function memory in MB (module default `128`). |
 | `timeout` | optional | Function timeout in seconds (module default `3`, max `900`). |
-| `repoUrl` | ✅ | Target GitHub repo (cds-snc) where the PR is opened. |
-| `terraformLoc` | ✅ | Directory the Terraform is written into, e.g. `terragrunt/aws/`. Files land in `<terraformLoc>/lambda/`. |
+| `repoUrl` | Required | Target GitHub repo (cds-snc) where the PR is opened. |
+| `terraformLoc` | Required | Directory the Terraform is written into, e.g. `terragrunt/aws/`. Files land in `<terraformLoc>/lambda/`. |
 
 ## How to use
 
