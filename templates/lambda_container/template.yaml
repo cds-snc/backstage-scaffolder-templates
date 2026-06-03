@@ -21,23 +21,35 @@ spec:
   parameters:
     - title: Fill in the lambda Details
       required:
-        - product_name 
-        - billing_code 
-        - ecr_tag  
+        - product_name
+        - billing_code
+        - ecr_repository_name
+        - ecr_tag
+        - cloudfront_distribution_id
       properties:
         product_name:
           title: What is the product name that you are creating the lambda for?
           type: string 
           description: The product name for the product for which you are creating the lambda function for . Required.
         billing_code:
-          title: Billing code 
+          title: Billing code
           type: string
-          description: The billing code to associate with the lambda function. 
+          description: The billing code to associate with the lambda function.
+        ecr_repository_name:
+          title: ECR repository name
+          type: string
+          description: The name of the existing ECR repository holding the container image. The repository URL and ARN are constructed from this name. Required.
+          ui:help: "Hint: For ECRs created with the ECR template this is <product_name>_ecr, for example doc_to_html_ecr."
         ecr_tag:
-          title: ECR Tag 
-          type: string 
+          title: ECR Tag
+          type: string
           description: The tag of the ECR Image. Required.
-          ui:help: "Hint: For example latest" 
+          ui:help: "Hint: For example latest"
+        cloudfront_distribution_id:
+          title: CloudFront distribution ID
+          type: string
+          description: The ID of the CloudFront distribution allowed to invoke this Lambda function URL. Required.
+          ui:help: "Hint: For example E1A2B3C4D5E6F7. Found in the CloudFront console or as the 'id' output of the distribution's terraform."
         memory:
           title: Memory of the lambda function 
           type: string 
@@ -85,7 +97,9 @@ spec:
         values:
           product_name: ${{ parameters.product_name }}
           billing_code: ${{ parameters.billing_code }}
+          ecr_repository_name: ${{ parameters.ecr_repository_name }}
           ecr_tag: ${{ parameters.ecr_tag }}
+          cloudfront_distribution_id: ${{ parameters.cloudfront_distribution_id }}
           memory: ${{ parameters.memory }}
           timeout: ${{ parameters.timeout }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
@@ -100,6 +114,8 @@ spec:
          "Lambda container function has been added to ${{ parameters.repoUrl }} with the following settings:"
           product_name: ${{ parameters.product_name }}
           billing_code: ${{ parameters.billing_code }}
+          ecr_repository_name: ${{ parameters.ecr_repository_name }}
+          cloudfront_distribution_id: ${{ parameters.cloudfront_distribution_id }}
           memory: ${{ parameters.memory }}
           timeout: ${{ parameters.timeout }}
           repoUrl: "github.com/cds-snc/${{ parameters.repoUrl }}"
